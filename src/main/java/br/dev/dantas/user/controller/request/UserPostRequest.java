@@ -1,4 +1,4 @@
-package br.dev.dantas.user.controller.usercontroller.request;
+package br.dev.dantas.user.controller.request;
 
 
 import lombok.Getter;
