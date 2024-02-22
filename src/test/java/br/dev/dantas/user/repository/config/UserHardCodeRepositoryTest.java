@@ -2,9 +2,8 @@ package br.dev.dantas.user.repository.config;
 
 import br.dev.dantas.user.commons.UserUtils;
 import br.dev.dantas.user.domain.entity.User;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.TestMethodOrder;
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
@@ -35,6 +34,14 @@ class UserHardCodeRepositoryTest {
         users = userUtils.newUsersList();
 
         BDDMockito.when(userData.getUsers()).thenReturn(users);
+    }
+
+    @Test
+    @DisplayName("findAll() returns a list with all users")
+    @Order(1)
+    void findAll_ReturnsAllUsers_WhenSuccessful() {
+        var users = repository.findAll();
+        Assertions.assertThat(userData.getUsers()).hasSameElementsAs(users);
     }
 
 }
