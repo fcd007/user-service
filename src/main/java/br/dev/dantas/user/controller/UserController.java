@@ -27,7 +27,7 @@ public class UserController {
     public ResponseEntity<List<UserGetResponse>> list() {
         log.info("Request received to list all users");
 
-        var user = userService.listAll();
+        var user = userService.findAll();
         var userGetResponse = userMapper.toUserGetResponseList(user);
 
         return ResponseEntity.ok(userGetResponse);
