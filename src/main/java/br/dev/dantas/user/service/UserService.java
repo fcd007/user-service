@@ -12,7 +12,7 @@ import java.util.List;
 public class UserService {
 
     private final UserHardCodeRepository userHardCodeRepository;
-    public List<User> listAll() {
+    public List<User> findAll() {
         return userHardCodeRepository.findAll();
     }
 }
