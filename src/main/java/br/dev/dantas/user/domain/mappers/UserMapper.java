@@ -16,4 +16,6 @@ public interface UserMapper {
     User toUser(UserPostRequest request);
 
     List<UserGetResponse> toUserGetResponseList(List<User> users);
+
+    UserGetResponse toUserGetResponse(User user);
 }
