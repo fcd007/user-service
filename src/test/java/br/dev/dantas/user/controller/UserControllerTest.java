@@ -14,6 +14,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.util.Collections;
+
 @WebMvcTest(UserController.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class UserControllerTest {
@@ -39,6 +41,20 @@ class UserControllerTest {
         var response = fileUtils.readResourceFile("user/get-all-users-200.json");
 
         BDDMockito.when(userService.findAll()).thenReturn(userUtils.newUsersList());
+
+        mockMvc.perform(MockMvcRequestBuilders.get(IUserController.V1_PATH_DEFAULT))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().json(response));
+    }
+
+    @Test
+    @DisplayName("findAll() returns a list with all users")
+    @Order(1)
+    void findAll_ReturnsAllEmpty_WhenNoUsersAreFound() throws Exception {
+        var response = fileUtils.readResourceFile("user/get-all-users-empty-list-200.json");
+
+        BDDMockito.when(userService.findAll()).thenReturn(Collections.emptyList());
 
         mockMvc.perform(MockMvcRequestBuilders.get(IUserController.V1_PATH_DEFAULT))
                 .andDo(MockMvcResultHandlers.print())
