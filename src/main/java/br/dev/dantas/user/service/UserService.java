@@ -21,4 +21,8 @@ public class UserService {
     public User findById(Long id) {
         return userHardCodeRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
     }
+
+    public User save(User user) {
+        return userHardCodeRepository.save(user);
+    }
 }

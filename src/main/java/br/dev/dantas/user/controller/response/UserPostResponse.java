@@ -10,6 +10,8 @@ import lombok.ToString;
 @ToString
 public class UserPostResponse {
 
+    private Long id;
+
     private String firstName;
 
     private String lastName;

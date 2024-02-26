@@ -24,4 +24,9 @@ public class UserHardCodeRepository {
     public List<User> findByName(String name) {
         return name == null ? userData.getUsers() : userData.getUsers().stream().filter(user -> user.getFirstName().equalsIgnoreCase(name)).toList();
     }
+
+    public User save(User user) {
+        userData.getUsers().add(user);
+        return user;
+    }
 }

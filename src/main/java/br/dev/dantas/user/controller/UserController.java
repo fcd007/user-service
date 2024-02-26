@@ -1,11 +1,14 @@
 package br.dev.dantas.user.controller;
 
 
+import br.dev.dantas.user.controller.request.UserPostRequest;
 import br.dev.dantas.user.controller.response.UserGetResponse;
+import br.dev.dantas.user.controller.response.UserPostResponse;
 import br.dev.dantas.user.domain.mappers.UserMapper;
 import br.dev.dantas.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,5 +41,16 @@ public class UserController {
         var userGetResponse = userMapper.toUserGetResponse(user);
 
         return ResponseEntity.ok(userGetResponse);
+    }
+
+    @PostMapping
+    public ResponseEntity<UserPostResponse> save(@RequestBody UserPostRequest request) {
+        log.info("Request create user post method '{}'", request);
+
+        var user = userMapper.toUser(request);
+        user = userService.save(user);
+        var response = userMapper.toUserPostResponse(user);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 }

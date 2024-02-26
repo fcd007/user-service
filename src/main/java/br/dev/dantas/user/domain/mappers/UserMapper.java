@@ -2,6 +2,7 @@ package br.dev.dantas.user.domain.mappers;
 
 import br.dev.dantas.user.controller.request.UserPostRequest;
 import br.dev.dantas.user.controller.response.UserGetResponse;
+import br.dev.dantas.user.controller.response.UserPostResponse;
 import br.dev.dantas.user.domain.entity.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -18,4 +19,6 @@ public interface UserMapper {
     List<UserGetResponse> toUserGetResponseList(List<User> users);
 
     UserGetResponse toUserGetResponse(User user);
+
+    UserPostResponse toUserPostResponse(User user);
 }
