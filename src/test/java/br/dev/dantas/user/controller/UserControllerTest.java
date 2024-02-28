@@ -13,6 +13,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
@@ -100,5 +101,24 @@ class UserControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.get(IUserController.V1_PATH_DEFAULT + "/{id}", id))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isNotFound());
+    }
+
+    @Test
+    @DisplayName("save() create a user")
+    @Order(4)
+    void save_CreateUser_WhenSuccessful() throws Exception {
+        var request = fileUtils.readResourceFile("user/post-request-user-200.json");
+        var response = fileUtils.readResourceFile("user/post-response-user-201.json");
+
+        var userToBeSaved = userUtils.newUserToSave();
+        BDDMockito.when(userService.save(ArgumentMatchers.any())).thenReturn(userToBeSaved);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .post(IUserController.V1_PATH_DEFAULT)
+                        .content(request).contentType(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.content()
+                        .contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isCreated())
+                .andExpect(MockMvcResultMatchers.content().json(response));
     }
 }
