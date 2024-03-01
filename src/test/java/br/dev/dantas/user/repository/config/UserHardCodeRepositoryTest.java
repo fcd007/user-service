@@ -51,6 +51,7 @@ class UserHardCodeRepositoryTest {
         var userOptional = repository.findById(3L);
         Assertions.assertThat(userOptional).isPresent().contains(users.get(2));
     }
+
     @Test
     @DisplayName("save() creates a user")
     @Order(3)
@@ -76,4 +77,16 @@ class UserHardCodeRepositoryTest {
         Assertions.assertThat(this.users).doesNotContain(userToDelete);
     }
 
+    @Test
+    @DisplayName("update() updates a throw ResponseStatusException not found")
+    @Order(8)
+    void update_ThrowResponseStatusException_WhenNoUserIsFound() {
+        var userToUpdate = this.users.get(0);
+
+        userToUpdate.setFirstName("Kelly");
+
+        repository.update(userToUpdate);
+        Assertions.assertThat(this.users).contains(userToUpdate);
+        this.users.stream().filter(user -> user.getId().equals(userToUpdate.getId())).findFirst().ifPresent(anime -> Assertions.assertThat(anime.getFirstName()).isEqualTo(userToUpdate.getFirstName()));
+    }
 }
