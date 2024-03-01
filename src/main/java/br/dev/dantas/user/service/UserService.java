@@ -13,16 +13,22 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserService {
 
-    private final UserHardCodeRepository userHardCodeRepository;
+    private final UserHardCodeRepository repository;
+
     public List<User> findAll() {
-        return userHardCodeRepository.findAll();
+        return repository.findAll();
     }
 
     public User findById(Long id) {
-        return userHardCodeRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+        return repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
     }
 
     public User save(User user) {
-        return userHardCodeRepository.save(user);
+        return repository.save(user);
+    }
+
+    public void delete(Long id) {
+        var user = findById(id);
+        repository.delete(user);
     }
 }
