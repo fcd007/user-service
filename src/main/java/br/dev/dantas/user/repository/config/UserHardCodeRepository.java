@@ -33,4 +33,9 @@ public class UserHardCodeRepository {
     public void delete(User user) {
         userData.getUsers().remove(user);
     }
+
+    public void update(User userToUpdate) {
+        delete(userToUpdate);
+        save(userToUpdate);
+    }
 }
