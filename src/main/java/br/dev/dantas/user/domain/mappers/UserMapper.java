@@ -1,6 +1,7 @@
 package br.dev.dantas.user.domain.mappers;
 
 import br.dev.dantas.user.controller.request.UserPostRequest;
+import br.dev.dantas.user.controller.request.UserPutRequest;
 import br.dev.dantas.user.controller.response.UserGetResponse;
 import br.dev.dantas.user.controller.response.UserPostResponse;
 import br.dev.dantas.user.domain.entity.User;
@@ -15,6 +16,8 @@ public interface UserMapper {
 
     @Mapping(target = "id", expression = "java(java.util.concurrent.ThreadLocalRandom.current().nextLong(100_000))")
     User toUser(UserPostRequest request);
+
+    User toUser(UserPutRequest request);
 
     List<UserGetResponse> toUserGetResponseList(List<User> users);
 
