@@ -47,9 +47,22 @@ class UserHardCodeRepositoryTest {
     @Test
     @DisplayName("findById() returns an object with given id")
     @Order(2)
-    void findById_ReturnsAllAnimes_WhenSuccessful() {
+    void findById_ReturnsAllUsers_WhenSuccessful() {
         var userOptional = repository.findById(3L);
         Assertions.assertThat(userOptional).isPresent().contains(users.get(2));
+    }
+    @Test
+    @DisplayName("save() creates a user")
+    @Order(3)
+    void save_CreatesUser_WhenSuccessFul() {
+        var userToBeSaved = userUtils.newUserToSave();
+
+        var user = repository.save(userToBeSaved);
+
+        Assertions.assertThat(user).isEqualTo(userToBeSaved).hasNoNullFieldsOrProperties();
+
+        var userSaved = repository.findAll();
+        Assertions.assertThat(userSaved).contains(userToBeSaved);
     }
 
 }
