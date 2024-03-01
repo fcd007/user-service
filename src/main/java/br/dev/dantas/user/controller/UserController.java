@@ -2,6 +2,7 @@ package br.dev.dantas.user.controller;
 
 
 import br.dev.dantas.user.controller.request.UserPostRequest;
+import br.dev.dantas.user.controller.request.UserPutRequest;
 import br.dev.dantas.user.controller.response.UserGetResponse;
 import br.dev.dantas.user.controller.response.UserPostResponse;
 import br.dev.dantas.user.domain.mappers.UserMapper;
@@ -59,6 +60,17 @@ public class UserController {
         log.info("Request received to delete the user by id'{}'", id);
 
         userService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping
+    public ResponseEntity<Void> update(@RequestBody UserPutRequest request) {
+        log.info("Request received to update the user '{}'", request);
+
+        var userToUpdate = userMapper.toUser(request);
+
+        userService.update(userToUpdate);
+
         return ResponseEntity.noContent().build();
     }
 }
