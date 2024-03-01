@@ -103,4 +103,35 @@ class UserServiceTest {
                 .isThrownBy(() -> service.delete(id))
                 .isInstanceOf(ResponseStatusException.class);
     }
+
+    @Test
+    @DisplayName("update() updates a user")
+    @Order(7)
+    void update_UpdateUser_WhenSuccessFul() {
+        var id = 1L;
+        var userToUpdate = this.users.get(0);
+        userToUpdate.setFirstName("Kelly");
+
+        BDDMockito.when(repository.findById(id)).thenReturn(Optional.of(userToUpdate));
+        BDDMockito.doNothing().when(repository).update(userToUpdate);
+
+        service.update(userToUpdate);
+
+        Assertions.assertThatNoException().isThrownBy(() -> service.update(userToUpdate));
+    }
+
+    @Test
+    @DisplayName("update() updates a throw ResponseStatusException not found")
+    @Order(9)
+    void update_ThrowResponseStatusException_WhenNoUserIsFound() {
+        var id = 1L;
+        var userToUpdate = this.users.get(0);
+        userToUpdate.setFirstName("Kelly");
+
+        BDDMockito.when(repository.findById(id)).thenReturn(Optional.empty());
+
+        Assertions.assertThatException()
+                .isThrownBy(() -> service.update(userToUpdate))
+                .isInstanceOf(ResponseStatusException.class);
+    }
 }
