@@ -127,6 +127,7 @@ class UserControllerTest {
     @Order(5)
     void delete_RemovesUser_WhenSuccessFul() throws Exception {
         var id = 1L;
+        BDDMockito.doNothing().when(userService).delete(ArgumentMatchers.any());
         mockMvc.perform(MockMvcRequestBuilders.delete(IUserController.V1_PATH_DEFAULT + "/{id}", id))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isNoContent());
@@ -138,9 +139,42 @@ class UserControllerTest {
     void delete_ThrowResponseStatusException_WhenNoUserIsFound() throws Exception {
         var id = 10L;
         BDDMockito.doThrow(new ResponseStatusException(HttpStatus.NOT_FOUND))
-                        .when(userService).delete(id);
+                .when(userService).delete(id);
 
         mockMvc.perform(MockMvcRequestBuilders.delete(IUserController.V1_PATH_DEFAULT + "/{id}", id))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isNotFound());
+    }
+
+    @Test
+    @DisplayName("update() updates a user")
+    @Order(7)
+    void update_UpdateAnime_WhenSuccessFul() throws Exception {
+        var request = fileUtils.readResourceFile("user/put-request-user-204.json");
+
+        BDDMockito.doNothing().when(userService).update(ArgumentMatchers.any());
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .put(IUserController.V1_PATH_DEFAULT)
+                        .content(request).contentType(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isNoContent());
+    }
+
+    @Test
+    @DisplayName("update() updates a throw ResponseStatusException not found")
+    @Order(8)
+    void update_ThrowResponseStatusException_WhenNoUserIsFound() throws Exception {
+        var request = fileUtils.readResourceFile("user/put-request-user-404.json");
+        var userToUpdated = userUtils.newUserToSave();
+
+        BDDMockito.doThrow(new ResponseStatusException(HttpStatus.NOT_FOUND))
+                .when(userService).update(userToUpdated);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .put(IUserController.V1_PATH_DEFAULT)
+                        .content(request)
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
