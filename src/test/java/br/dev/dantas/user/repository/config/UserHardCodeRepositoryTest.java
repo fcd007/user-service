@@ -65,4 +65,15 @@ class UserHardCodeRepositoryTest {
         Assertions.assertThat(userSaved).contains(userToBeSaved);
     }
 
+    @Test
+    @DisplayName("delete() removes a user")
+    @Order(4)
+    void delete_RemovesAnime_WhenSuccessFul() {
+        var userToDelete = this.users.get(0);
+
+        repository.delete(userToDelete);
+
+        Assertions.assertThat(this.users).doesNotContain(userToDelete);
+    }
+
 }
