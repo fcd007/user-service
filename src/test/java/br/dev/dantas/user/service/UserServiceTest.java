@@ -80,4 +80,27 @@ class UserServiceTest {
 
         Assertions.assertThat(user).isEqualTo(userToBeSaved).hasNoNullFieldsOrProperties();
     }
+
+    @Test
+    @DisplayName("delete() removes a user")
+    @Order(5)
+    void delete_RemovesUser_WhenSuccessFul() {
+        var id = 1L;
+        var userToDelete = this.users.get(0);
+        BDDMockito.when(repository.findById(id)).thenReturn(Optional.of(userToDelete));
+
+        Assertions.assertThatNoException().isThrownBy(() -> service.delete(id));
+    }
+
+    @Test
+    @DisplayName("delete() removes a throw ResponseStatusException not found")
+    @Order(6)
+    void delete_ThrowResponseStatusException_WhenNoUserIsFound() {
+        var id = 1L;
+        BDDMockito.when(repository.findById(id)).thenReturn(Optional.empty());
+
+        Assertions.assertThatException()
+                .isThrownBy(() -> service.delete(id))
+                .isInstanceOf(ResponseStatusException.class);
+    }
 }
