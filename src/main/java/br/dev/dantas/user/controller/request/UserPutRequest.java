@@ -8,7 +8,9 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class UserPostRequest {
+public class UserPutRequest {
+
+    private Long id;
 
     private String firstName;
 
