@@ -3,9 +3,9 @@ package br.dev.dantas.user.service;
 import br.dev.dantas.user.commons.UserUtils;
 import br.dev.dantas.user.domain.entity.User;
 import br.dev.dantas.user.repository.config.UserHardCodeRepository;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.assertj.core.api.Assertions;
 import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -68,6 +68,7 @@ class UserServiceTest {
                 .isThrownBy(() -> service.findById(id))
                 .isInstanceOf(ResponseStatusException.class);
     }
+
     @Test
     @DisplayName("save() creates a user")
     @Order(4)
