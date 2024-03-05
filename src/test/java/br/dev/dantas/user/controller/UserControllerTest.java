@@ -2,15 +2,20 @@ package br.dev.dantas.user.controller;
 
 import br.dev.dantas.user.commons.FileUtils;
 import br.dev.dantas.user.commons.UserUtils;
+import br.dev.dantas.user.domain.mappers.UserMapper;
+import br.dev.dantas.user.domain.mappers.UserMapperImpl;
+import br.dev.dantas.user.repository.config.UserData;
 import br.dev.dantas.user.repository.config.UserHardCodeRepository;
 import br.dev.dantas.user.service.UserService;
 import org.junit.jupiter.api.*;
 import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -24,21 +29,26 @@ import java.util.Collections;
 
 @WebMvcTest(UserController.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@Import({UserMapperImpl.class, FileUtils.class, UserUtils.class})
 class UserControllerTest {
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    @MockBean
+    private UserData userData;
+
+    @Autowired
+    private FileUtils fileUtils;
+
+    @SpyBean
+    private UserHardCodeRepository repository;
 
     @MockBean
     private UserService userService;
 
-    @SpyBean
-    private UserHardCodeRepository repository;
-    @Autowired
-    private MockMvc mockMvc;
-
     @Autowired
     private ResourceLoader resourceLoader;
-
-    @Autowired
-    private FileUtils fileUtils;
 
     @Autowired
     private UserUtils userUtils;

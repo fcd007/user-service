@@ -3,7 +3,6 @@ package br.dev.dantas.user.repository.config;
 import br.dev.dantas.user.domain.entity.User;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
