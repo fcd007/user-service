@@ -7,6 +7,7 @@ import br.dev.dantas.user.controller.response.UserGetResponse;
 import br.dev.dantas.user.controller.response.UserPostResponse;
 import br.dev.dantas.user.domain.mappers.UserMapper;
 import br.dev.dantas.user.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
@@ -45,7 +46,7 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<UserPostResponse> save(@RequestBody UserPostRequest request) {
+    public ResponseEntity<UserPostResponse> save(@RequestBody @Valid UserPostRequest request) {
         log.info("Request create user post method '{}'", request);
 
         var user = userMapper.toUser(request);

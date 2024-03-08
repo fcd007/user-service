@@ -1,2 +1,23 @@
+spring:
+
+  profiles:
+    active:
+      - live
+      - test
+  application:
+    name: user-service
+
 server:
-  port:8090
+  port: 8090
+  servlet:
+    context-path: /
+
+logging:
+  level:
+    root: INFO
+
+# D / T / A / P
+#database:
+#  url: localhost:5432
+#  username: ${LOCAL_USERNAME}
+#  password: ${LOCAL_PASSWORD}
