@@ -2,15 +2,14 @@ package br.dev.dantas.user.controller;
 
 import br.dev.dantas.user.commons.FileUtils;
 import br.dev.dantas.user.commons.UserUtils;
-import br.dev.dantas.user.domain.mappers.UserMapper;
 import br.dev.dantas.user.domain.mappers.UserMapperImpl;
 import br.dev.dantas.user.repository.config.UserData;
 import br.dev.dantas.user.repository.config.UserHardCodeRepository;
 import br.dev.dantas.user.service.UserService;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
 import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -133,8 +132,35 @@ class UserControllerTest {
     }
 
     @Test
-    @DisplayName("delete() removes a user")
+    @DisplayName("save() returns bad request when fields are empty")
     @Order(5)
+    void save_ReturnsBadRequest_WhenFieldAreEmpty() throws Exception {
+        var request = fileUtils.readResourceFile("user/post-request-user-empty-fields-400.json");
+
+        var mvcResult = mockMvc.perform(MockMvcRequestBuilders
+                        .post(IUserController.V1_PATH_DEFAULT)
+                        .content(request)
+                        .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andReturn();
+
+        var resolvedException = mvcResult.getResolvedException();
+        Assertions.assertThat(mvcResult.getResolvedException()).isNotNull();
+
+        var firstNameError = "he field firstName is required";
+        var lastNameError = "he field lastName is required";
+        var emailError = "he field email is required";
+
+        Assertions.assertThat(resolvedException.getMessage())
+                .contains(firstNameError, lastNameError, emailError);
+
+    }
+
+    @Test
+    @DisplayName("delete() removes a user")
+    @Order(6)
     void delete_RemovesUser_WhenSuccessFul() throws Exception {
         var id = 1L;
         BDDMockito.doNothing().when(userService).delete(ArgumentMatchers.any());
@@ -145,7 +171,7 @@ class UserControllerTest {
 
     @Test
     @DisplayName("delete() removes a throw ResponseStatusException not found to be delete")
-    @Order(6)
+    @Order(7)
     void delete_ThrowResponseStatusException_WhenNoUserIsFound() throws Exception {
         var id = 10L;
         BDDMockito.doThrow(new ResponseStatusException(HttpStatus.NOT_FOUND))
@@ -158,7 +184,7 @@ class UserControllerTest {
 
     @Test
     @DisplayName("update() updates a user")
-    @Order(7)
+    @Order(8)
     void update_UpdateAnime_WhenSuccessFul() throws Exception {
         var request = fileUtils.readResourceFile("user/put-request-user-204.json");
 
@@ -173,7 +199,7 @@ class UserControllerTest {
 
     @Test
     @DisplayName("update() updates a throw ResponseStatusException not found")
-    @Order(8)
+    @Order(9)
     void update_ThrowResponseStatusException_WhenNoUserIsFound() throws Exception {
         var request = fileUtils.readResourceFile("user/put-request-user-404.json");
         var userToUpdated = userUtils.newUserToSave();
