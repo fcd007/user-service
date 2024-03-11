@@ -159,6 +159,33 @@ class UserControllerTest {
     }
 
     @Test
+    @DisplayName("save() returns bad request when fields are blank")
+    @Order(5)
+    void save_ReturnsBadRequest_WhenFieldAreBlank() throws Exception {
+        var request = fileUtils.readResourceFile("user/post-request-user-blank-fields-400.json");
+
+        var mvcResult = mockMvc.perform(MockMvcRequestBuilders
+                        .post(IUserController.V1_PATH_DEFAULT)
+                        .content(request)
+                        .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andReturn();
+
+        var resolvedException = mvcResult.getResolvedException();
+        Assertions.assertThat(mvcResult.getResolvedException()).isNotNull();
+
+        var firstNameError = "he field firstName is required";
+        var lastNameError = "he field lastName is required";
+        var emailError = "he field email is required";
+
+        Assertions.assertThat(resolvedException.getMessage())
+                .contains(firstNameError, lastNameError, emailError);
+
+    }
+
+    @Test
     @DisplayName("delete() removes a user")
     @Order(6)
     void delete_RemovesUser_WhenSuccessFul() throws Exception {
