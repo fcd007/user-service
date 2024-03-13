@@ -8,6 +8,9 @@ import br.dev.dantas.user.repository.config.UserHardCodeRepository;
 import br.dev.dantas.user.service.UserService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +28,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Collections;
+import java.util.List;
+import java.util.stream.Stream;
 
 @WebMvcTest(UserController.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -60,10 +65,7 @@ class UserControllerTest {
 
         BDDMockito.when(userService.findAll()).thenReturn(userUtils.newUsersList());
 
-        mockMvc.perform(MockMvcRequestBuilders.get(IUserController.V1_PATH_DEFAULT))
-                .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().json(response));
+        mockMvc.perform(MockMvcRequestBuilders.get(IUserController.V1_PATH_DEFAULT)).andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.content().json(response));
     }
 
     @Test
@@ -74,10 +76,7 @@ class UserControllerTest {
 
         BDDMockito.when(userService.findAll()).thenReturn(Collections.emptyList());
 
-        mockMvc.perform(MockMvcRequestBuilders.get(IUserController.V1_PATH_DEFAULT))
-                .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().json(response));
+        mockMvc.perform(MockMvcRequestBuilders.get(IUserController.V1_PATH_DEFAULT)).andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.content().json(response));
     }
 
     @Test
@@ -87,17 +86,10 @@ class UserControllerTest {
         var response = fileUtils.readResourceFile("user/get-user-by-id-200.json");
         var id = 1L;
 
-        var userFound = userUtils.newUsersList()
-                .stream()
-                .filter(user -> user.getId().equals(id))
-                .findFirst()
-                .orElse(null);
+        var userFound = userUtils.newUsersList().stream().filter(user -> user.getId().equals(id)).findFirst().orElse(null);
         BDDMockito.when(userService.findById(id)).thenReturn(userFound);
 
-        mockMvc.perform(MockMvcRequestBuilders.get(IUserController.V1_PATH_DEFAULT + "/{id}", id))
-                .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().json(response));
+        mockMvc.perform(MockMvcRequestBuilders.get(IUserController.V1_PATH_DEFAULT + "/{id}", id)).andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.content().json(response));
     }
 
     @Test
@@ -107,9 +99,7 @@ class UserControllerTest {
         var id = 10L;
         BDDMockito.when(userService.findById(ArgumentMatchers.any())).thenThrow(new ResponseStatusException(HttpStatus.NOT_FOUND));
 
-        mockMvc.perform(MockMvcRequestBuilders.get(IUserController.V1_PATH_DEFAULT + "/{id}", id))
-                .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.status().isNotFound());
+        mockMvc.perform(MockMvcRequestBuilders.get(IUserController.V1_PATH_DEFAULT + "/{id}", id)).andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
     @Test
@@ -122,66 +112,23 @@ class UserControllerTest {
         var userToBeSaved = userUtils.newUserToSave();
         BDDMockito.when(userService.save(ArgumentMatchers.any())).thenReturn(userToBeSaved);
 
-        mockMvc.perform(MockMvcRequestBuilders
-                        .post(IUserController.V1_PATH_DEFAULT)
-                        .content(request).contentType(MediaType.APPLICATION_JSON))
-                .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.content()
-                        .contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isCreated())
-                .andExpect(MockMvcResultMatchers.content().json(response));
+        mockMvc.perform(MockMvcRequestBuilders.post(IUserController.V1_PATH_DEFAULT).content(request).contentType(MediaType.APPLICATION_JSON)).andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON)).andExpect(MockMvcResultMatchers.status().isCreated()).andExpect(MockMvcResultMatchers.content().json(response));
     }
 
-    @Test
+    @ParameterizedTest
+    @MethodSource("postUserBadRequestSource")
     @DisplayName("save() returns bad request when fields are empty")
     @Order(5)
-    void save_ReturnsBadRequest_WhenFieldAreEmpty() throws Exception {
-        var request = fileUtils.readResourceFile("user/post-request-user-empty-fields-400.json");
+    void save_ReturnsBadRequest_WhenFieldAreEmpty(String fileName, List<String> errors) throws Exception {
+        var request = fileUtils.readResourceFile("user/%s".formatted(fileName));
 
-        var mvcResult = mockMvc.perform(MockMvcRequestBuilders
-                        .post(IUserController.V1_PATH_DEFAULT)
-                        .content(request)
-                        .contentType(MediaType.APPLICATION_JSON)
-                )
-                .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andReturn();
+        var mvcResult = mockMvc.perform(MockMvcRequestBuilders.post(IUserController.V1_PATH_DEFAULT).content(request).contentType(MediaType.APPLICATION_JSON)).andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isBadRequest()).andReturn();
 
         var resolvedException = mvcResult.getResolvedException();
         Assertions.assertThat(mvcResult.getResolvedException()).isNotNull();
 
-        var firstNameError = "he field firstName is required";
-        var lastNameError = "he field lastName is required";
-        var emailError = "he field email is required";
 
-        Assertions.assertThat(resolvedException.getMessage())
-                .contains(firstNameError, lastNameError, emailError);
-
-    }
-
-    @Test
-    @DisplayName("save() returns bad request when fields are blank")
-    @Order(5)
-    void save_ReturnsBadRequest_WhenFieldAreBlank() throws Exception {
-        var request = fileUtils.readResourceFile("user/post-request-user-blank-fields-400.json");
-
-        var mvcResult = mockMvc.perform(MockMvcRequestBuilders
-                        .post(IUserController.V1_PATH_DEFAULT)
-                        .content(request)
-                        .contentType(MediaType.APPLICATION_JSON)
-                )
-                .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andReturn();
-
-        var resolvedException = mvcResult.getResolvedException();
-        Assertions.assertThat(mvcResult.getResolvedException()).isNotNull();
-
-        var firstNameError = "he field firstName is required";
-        var lastNameError = "he field lastName is required";
-        var emailError = "he field email is required";
-
-        Assertions.assertThat(resolvedException.getMessage())
-                .contains(firstNameError, lastNameError, emailError);
+        Assertions.assertThat(resolvedException.getMessage()).contains(errors);
 
     }
 
@@ -191,9 +138,7 @@ class UserControllerTest {
     void delete_RemovesUser_WhenSuccessFul() throws Exception {
         var id = 1L;
         BDDMockito.doNothing().when(userService).delete(ArgumentMatchers.any());
-        mockMvc.perform(MockMvcRequestBuilders.delete(IUserController.V1_PATH_DEFAULT + "/{id}", id))
-                .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.status().isNoContent());
+        mockMvc.perform(MockMvcRequestBuilders.delete(IUserController.V1_PATH_DEFAULT + "/{id}", id)).andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNoContent());
     }
 
     @Test
@@ -201,12 +146,9 @@ class UserControllerTest {
     @Order(7)
     void delete_ThrowResponseStatusException_WhenNoUserIsFound() throws Exception {
         var id = 10L;
-        BDDMockito.doThrow(new ResponseStatusException(HttpStatus.NOT_FOUND))
-                .when(userService).delete(id);
+        BDDMockito.doThrow(new ResponseStatusException(HttpStatus.NOT_FOUND)).when(userService).delete(id);
 
-        mockMvc.perform(MockMvcRequestBuilders.delete(IUserController.V1_PATH_DEFAULT + "/{id}", id))
-                .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.status().isNotFound());
+        mockMvc.perform(MockMvcRequestBuilders.delete(IUserController.V1_PATH_DEFAULT + "/{id}", id)).andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
     @Test
@@ -217,11 +159,7 @@ class UserControllerTest {
 
         BDDMockito.doNothing().when(userService).update(ArgumentMatchers.any());
 
-        mockMvc.perform(MockMvcRequestBuilders
-                        .put(IUserController.V1_PATH_DEFAULT)
-                        .content(request).contentType(MediaType.APPLICATION_JSON))
-                .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.status().isNoContent());
+        mockMvc.perform(MockMvcRequestBuilders.put(IUserController.V1_PATH_DEFAULT).content(request).contentType(MediaType.APPLICATION_JSON)).andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNoContent());
     }
 
     @Test
@@ -231,14 +169,20 @@ class UserControllerTest {
         var request = fileUtils.readResourceFile("user/put-request-user-404.json");
         var userToUpdated = userUtils.newUserToSave();
 
-        BDDMockito.doThrow(new ResponseStatusException(HttpStatus.NOT_FOUND))
-                .when(userService).update(userToUpdated);
+        BDDMockito.doThrow(new ResponseStatusException(HttpStatus.NOT_FOUND)).when(userService).update(userToUpdated);
 
-        mockMvc.perform(MockMvcRequestBuilders
-                        .put(IUserController.V1_PATH_DEFAULT)
-                        .content(request)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.status().isNotFound());
+        mockMvc.perform(MockMvcRequestBuilders.put(IUserController.V1_PATH_DEFAULT).content(request).contentType(MediaType.APPLICATION_JSON)).andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNotFound());
+    }
+
+    private static Stream<Arguments> postUserBadRequestSource() {
+
+        var firstNameError = "he field firstName is required";
+        var lastNameError = "he field lastName is required";
+        var emailNameError = "he field email is required";
+
+        var listErrors = List.of(firstNameError, lastNameError, emailNameError);
+        var emailError = Collections.singletonList(emailNameError);
+
+        return Stream.of(Arguments.of("post-request-user-empty-fields-400.json", listErrors), Arguments.of("post-request-user-blank-fields-400.json", listErrors));
     }
 }
