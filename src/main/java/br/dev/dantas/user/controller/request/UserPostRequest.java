@@ -13,12 +13,12 @@ import lombok.ToString;
 @ToString
 public class UserPostRequest {
 
-    @NotBlank(message = "the field firstName is required")
+    @NotBlank(message = "The field firstName is required")
     private String firstName;
 
-    @NotBlank(message = "the field lastName is required")
+    @NotBlank(message = "The field lastName is required")
     private String lastName;
 
-    @Email(regexp = StringUtility.VALIDAR_EMAIL_REGEX_RFC_5322, message = "the email format is not valid")
+    @Email(regexp = StringUtility.VALIDAR_EMAIL_REGEX_RFC_5322, message = "The email format is not valid")
     private String email;
 }

@@ -29,6 +29,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Stream;
 
 @WebMvcTest(UserController.class)
@@ -122,13 +123,20 @@ class UserControllerTest {
     void save_ReturnsBadRequest_WhenFieldAreEmpty(String fileName, List<String> errors) throws Exception {
         var request = fileUtils.readResourceFile("user/%s".formatted(fileName));
 
-        var mvcResult = mockMvc.perform(MockMvcRequestBuilders.post(IUserController.V1_PATH_DEFAULT).content(request).contentType(MediaType.APPLICATION_JSON)).andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isBadRequest()).andReturn();
+        var mvcResult = mockMvc.perform(
+                MockMvcRequestBuilders
+                        .post(IUserController.V1_PATH_DEFAULT)
+                        .content(request)
+                        .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andReturn();
 
         var resolvedException = mvcResult.getResolvedException();
         Assertions.assertThat(mvcResult.getResolvedException()).isNotNull();
 
-
-        Assertions.assertThat(resolvedException.getMessage()).contains(errors);
+        Assertions.assertThat(Objects.requireNonNull(resolvedException).getMessage()).contains(errors);
 
     }
 
@@ -176,13 +184,17 @@ class UserControllerTest {
 
     private static Stream<Arguments> postUserBadRequestSource() {
 
-        var firstNameError = "he field firstName is required";
-        var lastNameError = "he field lastName is required";
-        var emailNameError = "he field email is required";
+        var firstNameError = "The field firstName is required";
+        var lastNameError = "The field lastName is required";
+        var emailNameError = "The email format is not valid";
 
         var listErrors = List.of(firstNameError, lastNameError, emailNameError);
         var emailError = Collections.singletonList(emailNameError);
 
-        return Stream.of(Arguments.of("post-request-user-empty-fields-400.json", listErrors), Arguments.of("post-request-user-blank-fields-400.json", listErrors));
+        return Stream.of(
+                Arguments.of("post-request-user-empty-fields-400.json", listErrors),
+                Arguments.of("post-request-user-blank-fields-400.json", listErrors),
+                Arguments.of("post-request-user-invalid-email-400.json", emailError)
+        );
     }
 }
