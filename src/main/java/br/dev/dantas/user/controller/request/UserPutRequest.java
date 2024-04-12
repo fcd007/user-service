@@ -4,6 +4,7 @@ package br.dev.dantas.user.controller.request;
 import br.dev.dantas.user.utils.StringUtility;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -13,7 +14,7 @@ import lombok.ToString;
 @ToString
 public class UserPutRequest {
 
-    @NotBlank(message = "the field id is required")
+    @NotNull
     private Long id;
 
     @NotBlank(message = "the field firstName is required")
