@@ -65,7 +65,7 @@ public class UserController {
     }
 
     @PutMapping
-    public ResponseEntity<Void> update(@RequestBody UserPutRequest request) {
+    public ResponseEntity<Void> update(@RequestBody @Valid UserPutRequest request) {
         log.info("Request received to update the user '{}'", request);
 
         var userToUpdate = userMapper.toUser(request);
