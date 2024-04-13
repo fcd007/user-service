@@ -213,7 +213,6 @@ class UserControllerTest {
         Assertions.assertThat(mvcResult.getResolvedException()).isNotNull();
 
         Assertions.assertThat(Objects.requireNonNull(resolvedException).getMessage()).contains(errors);
-
     }
 
     private static Stream<Arguments> postUserBadRequestSource() {
