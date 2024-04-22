@@ -1,12 +1,10 @@
 package br.dev.dantas.user.service;
 
 import br.dev.dantas.user.domain.entity.User;
-import br.dev.dantas.user.exception.NotFoundException;
 import br.dev.dantas.user.repository.config.UserHardCodeRepository;
+import exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
