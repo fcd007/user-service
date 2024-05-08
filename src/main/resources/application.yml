@@ -1,23 +1,11 @@
 spring:
-
-  profiles:
-    active:
-      - live
-      - test
-  application:
-    name: user-service
+  datasource:
+    url: jdbc:mysql://localhost:3306/user_service?userTimezone=true&serverTimezone=UTC&createDatabaseIfNotExist=true
+    username: ${ROOT_USER}
+    password: ${ROOT_PASSWORD}
+  jpa:
+    show-sql: true
 
 server:
   port: 8090
   servlet:
-    context-path: /
-
-logging:
-  level:
-    root: INFO
-
-# D / T / A / P
-#database:
-#  url: localhost:5432
-#  username: ${LOCAL_USERNAME}
-#  password: ${LOCAL_PASSWORD}
