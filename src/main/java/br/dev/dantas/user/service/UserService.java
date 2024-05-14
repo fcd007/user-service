@@ -2,6 +2,7 @@ package br.dev.dantas.user.service;
 
 import br.dev.dantas.user.domain.entity.User;
 import br.dev.dantas.user.repository.config.UserHardCodeRepository;
+import br.dev.dantas.user.repository.config.UserRepository;
 import exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -13,9 +14,10 @@ import java.util.List;
 public class UserService {
 
     private final UserHardCodeRepository repository;
+    private final UserRepository userRepository;
 
     public List<User> findAll() {
-        return repository.findAll();
+        return userRepository.findAll();
     }
 
     public User findById(Long id) {
