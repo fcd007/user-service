@@ -3,7 +3,8 @@ package br.dev.dantas.user.domain.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-@Data
+@Getter
+@Setter
 @Builder
 @ToString
 @NoArgsConstructor
@@ -11,9 +12,9 @@ import lombok.*;
 @AllArgsConstructor
 public class User {
 
+    @EqualsAndHashCode.Include
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false)
     private Long id;
 
     @Column(nullable = false)

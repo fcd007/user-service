@@ -4,7 +4,7 @@ import br.dev.dantas.user.commons.FileUtils;
 import br.dev.dantas.user.commons.UserUtils;
 import br.dev.dantas.user.domain.mappers.UserMapperImpl;
 import br.dev.dantas.user.repository.config.UserData;
-import br.dev.dantas.user.repository.config.UserHardCodeRepository;
+import br.dev.dantas.user.repository.config.UserRepository;
 import br.dev.dantas.user.service.UserService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
@@ -46,8 +46,8 @@ class UserControllerTest {
     @Autowired
     private FileUtils fileUtils;
 
-    @SpyBean
-    private UserHardCodeRepository repository;
+    @MockBean
+    private UserRepository repository;
 
     @MockBean
     private UserService userService;
@@ -123,15 +123,7 @@ class UserControllerTest {
     void save_ReturnsBadRequest_WhenFieldAreInvalid(String fileName, List<String> errors) throws Exception {
         var request = fileUtils.readResourceFile("user/%s".formatted(fileName));
 
-        var mvcResult = mockMvc.perform(
-                MockMvcRequestBuilders
-                        .post(IUserController.V1_PATH_DEFAULT)
-                        .content(request)
-                        .contentType(MediaType.APPLICATION_JSON)
-                )
-                .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andReturn();
+        var mvcResult = mockMvc.perform(MockMvcRequestBuilders.post(IUserController.V1_PATH_DEFAULT).content(request).contentType(MediaType.APPLICATION_JSON)).andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isBadRequest()).andReturn();
 
         var resolvedException = mvcResult.getResolvedException();
         Assertions.assertThat(mvcResult.getResolvedException()).isNotNull();
@@ -167,12 +159,7 @@ class UserControllerTest {
 
         BDDMockito.doNothing().when(userService).update(ArgumentMatchers.any());
 
-        mockMvc.perform(MockMvcRequestBuilders.put(
-                IUserController.V1_PATH_DEFAULT)
-                .content(request)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andDo(MockMvcResultHandlers.print()
-            ).andExpect(MockMvcResultMatchers.status().isNoContent());
+        mockMvc.perform(MockMvcRequestBuilders.put(IUserController.V1_PATH_DEFAULT).content(request).contentType(MediaType.APPLICATION_JSON)).andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNoContent());
     }
 
     @Test
@@ -184,12 +171,8 @@ class UserControllerTest {
 
         BDDMockito.doThrow(new ResponseStatusException(HttpStatus.NOT_FOUND)).when(userService).update(userToUpdated);
 
-        mockMvc.perform(
-                MockMvcRequestBuilders
-                        .put(IUserController.V1_PATH_DEFAULT)
-                        .content(request).contentType(MediaType.APPLICATION_JSON))
-                .andDo(MockMvcResultHandlers.print()
-                ).andExpect(MockMvcResultMatchers.status().isNotFound());
+        mockMvc.perform(MockMvcRequestBuilders.put(IUserController.V1_PATH_DEFAULT).content(request).contentType(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNoContent());
     }
 
     @ParameterizedTest
@@ -199,15 +182,7 @@ class UserControllerTest {
     void update_ReturnsBadRequest_WhenFieldAreInvalid(String fileName, List<String> errors) throws Exception {
         var request = fileUtils.readResourceFile("user/%s".formatted(fileName));
 
-        var mvcResult = mockMvc.perform(
-                        MockMvcRequestBuilders
-                                .put(IUserController.V1_PATH_DEFAULT)
-                                .content(request)
-                                .contentType(MediaType.APPLICATION_JSON)
-                )
-                .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andReturn();
+        var mvcResult = mockMvc.perform(MockMvcRequestBuilders.put(IUserController.V1_PATH_DEFAULT).content(request).contentType(MediaType.APPLICATION_JSON)).andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isBadRequest()).andReturn();
 
         var resolvedException = mvcResult.getResolvedException();
         Assertions.assertThat(mvcResult.getResolvedException()).isNotNull();
@@ -224,11 +199,7 @@ class UserControllerTest {
         var listErrors = List.of(firstNameError, lastNameError, emailNameError);
         var emailError = Collections.singletonList(emailNameError);
 
-        return Stream.of(
-                Arguments.of("post-request-user-empty-fields-400.json", listErrors),
-                Arguments.of("post-request-user-blank-fields-400.json", listErrors),
-                Arguments.of("post-request-user-invalid-email-400.json", emailError)
-        );
+        return Stream.of(Arguments.of("post-request-user-empty-fields-400.json", listErrors), Arguments.of("post-request-user-blank-fields-400.json", listErrors), Arguments.of("post-request-user-invalid-email-400.json", emailError));
     }
 
     private static Stream<Arguments> updateUserBadRequestSource() {
@@ -240,10 +211,6 @@ class UserControllerTest {
         var listErrors = List.of(firstNameError, lastNameError, emailNameError);
         var emailError = Collections.singletonList(emailNameError);
 
-        return Stream.of(
-                Arguments.of("put-request-user-empty-fields-400.json", listErrors),
-                Arguments.of("put-request-user-blank-fields-400.json", listErrors),
-                Arguments.of("put-request-user-invalid-email-400.json", emailError)
-        );
+        return Stream.of(Arguments.of("put-request-user-empty-fields-400.json", listErrors), Arguments.of("put-request-user-blank-fields-400.json", listErrors), Arguments.of("put-request-user-invalid-email-400.json", emailError));
     }
 }

@@ -2,7 +2,6 @@ package br.dev.dantas.user.service;
 
 import br.dev.dantas.user.commons.UserUtils;
 import br.dev.dantas.user.domain.entity.User;
-import br.dev.dantas.user.repository.config.UserHardCodeRepository;
 import br.dev.dantas.user.repository.config.UserRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
@@ -24,10 +23,7 @@ class UserServiceTest {
     private UserService service;
 
     @Mock
-    private UserHardCodeRepository repository;
-
-    @Mock
-    private UserRepository userRepository;
+    private UserRepository repository;
 
     private List<User> users;
 
@@ -43,7 +39,7 @@ class UserServiceTest {
     @DisplayName("findAll() returns a list with all users")
     @Order(1)
     void findAll_ReturnsAllProducers_WhenSuccessful() {
-        BDDMockito.when(userRepository.findAll()).thenReturn(this.users);
+        BDDMockito.when(repository.findAll()).thenReturn(this.users);
 
         var users = service.findAll();
         Assertions.assertThat(users).hasSameElementsAs(this.users);
@@ -118,7 +114,7 @@ class UserServiceTest {
         userToUpdate.setFirstName("Kelly");
 
         BDDMockito.when(repository.findById(id)).thenReturn(Optional.of(userToUpdate));
-        BDDMockito.doNothing().when(repository).update(userToUpdate);
+        BDDMockito.when(repository.save(userToUpdate)).thenReturn(userToUpdate);
 
         service.update(userToUpdate);
 

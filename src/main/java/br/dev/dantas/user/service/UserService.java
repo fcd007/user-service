@@ -1,7 +1,6 @@
 package br.dev.dantas.user.service;
 
 import br.dev.dantas.user.domain.entity.User;
-import br.dev.dantas.user.repository.config.UserHardCodeRepository;
 import br.dev.dantas.user.repository.config.UserRepository;
 import exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -13,11 +12,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserService {
 
-    private final UserHardCodeRepository repository;
-    private final UserRepository userRepository;
+    private final UserRepository repository;
 
     public List<User> findAll() {
-        return userRepository.findAll();
+        return repository.findAll();
     }
 
     public User findById(Long id) {
@@ -35,7 +33,8 @@ public class UserService {
 
     public void update(User userToUpdate) {
         assertUserExists(userToUpdate);
-        repository.update(userToUpdate);
+
+        repository.save(userToUpdate);
     }
 
     private void assertUserExists(User userToUpdate) {
