@@ -3,6 +3,7 @@ package br.dev.dantas.user.service;
 import br.dev.dantas.user.commons.UserUtils;
 import br.dev.dantas.user.domain.entity.User;
 import br.dev.dantas.user.repository.config.UserRepository;
+import exception.EmalAlreadyExistsException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -75,6 +76,7 @@ class UserServiceTest {
     void save_CreateUser_WhenSuccessful() {
         var userToBeSaved = userUtils.newUserToSave();
 
+        BDDMockito.when(repository.findByEmail(userToBeSaved.getEmail())).thenReturn(Optional.empty());
         BDDMockito.when(repository.save(userToBeSaved)).thenReturn(userToBeSaved);
 
         var user = service.save(userToBeSaved);
@@ -110,9 +112,10 @@ class UserServiceTest {
     @Order(7)
     void update_UpdateUser_WhenSuccessFul() {
         var id = 1L;
-        var userToUpdate = this.users.get(0);
-        userToUpdate.setFirstName("Kelly");
+        var userToUpdate = this.users.get(0).withFirstName("Kelly");
+        var userDatabase = this.users.get(0);
 
+        BDDMockito.when(repository.findByEmail(userToUpdate.getEmail())).thenReturn(Optional.of(userDatabase));
         BDDMockito.when(repository.findById(id)).thenReturn(Optional.of(userToUpdate));
         BDDMockito.when(repository.save(userToUpdate)).thenReturn(userToUpdate);
 
@@ -123,16 +126,44 @@ class UserServiceTest {
 
     @Test
     @DisplayName("update() updates a throw ResponseStatusException not found")
-    @Order(9)
+    @Order(8)
     void update_ThrowResponseStatusException_WhenNoUserIsFound() {
         var id = 1L;
-        var userToUpdate = this.users.get(0);
-        userToUpdate.setFirstName("Kelly");
-
+        var userToUpdate = this.users.get(0).withFirstName("Kelly");
         BDDMockito.when(repository.findById(id)).thenReturn(Optional.empty());
 
         Assertions.assertThatException()
                 .isThrownBy(() -> service.update(userToUpdate))
                 .isInstanceOf(ResponseStatusException.class);
+    }
+
+    @Test
+    @DisplayName("update() updates EmailAllReadyExistsException when email belong to another user")
+    @Order(9)
+    void update_ThrowEmailAllReadyExistsException_WhenEmailBelongAnotherUser() {
+        var id = 1L;
+        var userToUpdate01 = this.users.get(0).withFirstName("Kelly");
+        var userToUpdate02 = this.users.get(1).withEmail(userToUpdate01.getEmail());
+
+        BDDMockito.when(repository.findByEmail(userToUpdate01.getEmail())).thenReturn(Optional.of(userToUpdate02));
+        BDDMockito.when(repository.findById(id)).thenReturn(Optional.of(userToUpdate02));
+
+        Assertions.assertThatException()
+                .isThrownBy(() -> service.update(userToUpdate01))
+                .isInstanceOf(EmalAlreadyExistsException.class);
+    }
+
+    @Test
+    @DisplayName("save() updates EmailAllReadyExistsException when email belong to another user")
+    @Order(10)
+    void save_ThrowEmailAllReadyExistsException_WhenEmailEmailAllreadyExists() {
+        var userToBeSaved01 = userUtils.newUserToSave();
+        var userSave = this.users.get(0).withEmail(userToBeSaved01.getEmail());
+
+        BDDMockito.when(repository.findByEmail(userToBeSaved01.getEmail())).thenReturn(Optional.of(userSave));
+
+        Assertions.assertThatException()
+                .isThrownBy(() -> service.save(userToBeSaved01))
+                .isInstanceOf(EmalAlreadyExistsException.class);
     }
 }

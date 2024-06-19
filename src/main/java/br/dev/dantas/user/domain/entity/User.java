@@ -10,6 +10,7 @@ import lombok.*;
 @NoArgsConstructor
 @Entity
 @AllArgsConstructor
+@With
 public class User {
 
     @EqualsAndHashCode.Include

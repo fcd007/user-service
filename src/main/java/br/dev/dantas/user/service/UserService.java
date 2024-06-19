@@ -2,11 +2,10 @@ package br.dev.dantas.user.service;
 
 import br.dev.dantas.user.domain.entity.User;
 import br.dev.dantas.user.repository.config.UserRepository;
+import exception.EmalAlreadyExistsException;
 import exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -35,7 +34,6 @@ public class UserService {
     }
 
     public void update(User userToUpdate) {
-
         //validacao para se existe usuario
         assertUserExists(userToUpdate);
         //validacao para verificar se email unico
@@ -51,7 +49,7 @@ public class UserService {
         repository.findByEmail(email)
                 .ifPresent(userNotFound -> {
                     if (!userNotFound.getId().equals(id)) {
-                        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email %s already in use ".formatted(email));
+                        throw new EmalAlreadyExistsException("Email %s already in use ".formatted(email));
                     }
                 });
     }
