@@ -1,6 +1,5 @@
 package br.dev.dantas.user.controller;
 
-
 import br.dev.dantas.user.controller.request.UserPostRequest;
 import br.dev.dantas.user.controller.request.UserPutRequest;
 import br.dev.dantas.user.controller.response.UserGetResponse;
