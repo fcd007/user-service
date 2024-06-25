@@ -2,6 +2,7 @@ package br.dev.dantas.user.service;
 
 import br.dev.dantas.user.domain.entity.User;
 import br.dev.dantas.user.repository.config.UserRepository;
+import br.dev.dantas.user.utils.Constants;
 import exception.EmalAlreadyExistsException;
 import exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +21,7 @@ public class UserService {
     }
 
     public User findById(Long id) {
-        return repository.findById(id).orElseThrow(() -> new NotFoundException("User not found"));
+        return repository.findById(id).orElseThrow(() -> new NotFoundException(Constants.USER_NOT_FOUND));
     }
 
     public User save(User user) {
