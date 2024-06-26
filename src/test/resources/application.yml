@@ -1,0 +1,9 @@
+logging:
+  level:
+    root: INFO
+
+spring:
+  jpa:
+    properties:
+      hibernate:
+        globally_quoted_identifiers: true

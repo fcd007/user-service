@@ -90,7 +90,8 @@ class UserControllerTest {
   @DisplayName("findById() returns empty list when no user is found")
   @Order(3)
   void findById_ReturnsAllUsers_WhenSuccessful() throws Exception {
-    var response = fileUtils.readResourceFile("user/get-user-by-id-200.json");
+    var response = fileUtils.readResourceFile(
+        "user/get-user-by-id-200.json");
     var id = 1L;
 
     var userFound = userUtils.newUsersList().stream().filter(user -> user.getId().equals(id))
@@ -247,7 +248,8 @@ class UserControllerTest {
     var listErrors = List.of(firstNameError, lastNameError, emailNameError);
     var emailError = Collections.singletonList(emailNameError);
 
-    return Stream.of(Arguments.of("put-request-user-empty-fields-400.json", listErrors),
+    return Stream.of(Arguments.of(
+            "put-request-user-empty-fields-400.json", listErrors),
         Arguments.of("put-request-user-blank-fields-400.json", listErrors),
         Arguments.of("put-request-user-invalid-email-400.json", emailError));
   }
