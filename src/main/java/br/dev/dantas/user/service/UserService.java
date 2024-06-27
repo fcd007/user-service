@@ -3,7 +3,7 @@ package br.dev.dantas.user.service;
 import br.dev.dantas.user.domain.entity.User;
 import br.dev.dantas.user.repository.config.UserRepository;
 import br.dev.dantas.user.utils.Constants;
-import exception.EmalAlreadyExistsException;
+import exception.EmailAllreadyExistsException;
 import exception.NotFoundException;
 import jakarta.transaction.Transactional;
 import java.util.List;
@@ -56,11 +56,10 @@ public class UserService {
   }
 
   private void assertEmailIsUnique(String email, Long id) {
-    repository.findByEmail(email)
-        .ifPresent(userNotFound -> {
-          if (!userNotFound.getId().equals(id)) {
-            throw new EmalAlreadyExistsException("Email %s already in use ".formatted(email));
-          }
-        });
+    repository.findByEmail(email).ifPresent(userNotFound -> {
+      if (!userNotFound.getId().equals(id)) {
+        throw new EmailAllreadyExistsException("Email %s already in use ".formatted(email));
+      }
+    });
   }
 }

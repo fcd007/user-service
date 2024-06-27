@@ -19,5 +19,6 @@ public class ProfilePutRequest {
   @NotBlank(message = "the field name is required")
   private String name;
 
+  @NotBlank(message = "the field description is required")
   private String description;
 }
