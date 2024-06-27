@@ -1,4 +1,4 @@
-package br.dev.dantas.user.controller;
+package br.dev.dantas.user.controller.usercontroller;
 
 public interface IUserController {
 

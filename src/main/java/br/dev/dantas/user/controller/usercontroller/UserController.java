@@ -1,9 +1,9 @@
-package br.dev.dantas.user.controller;
+package br.dev.dantas.user.controller.usercontroller;
 
-import br.dev.dantas.user.controller.request.UserPostRequest;
-import br.dev.dantas.user.controller.request.UserPutRequest;
-import br.dev.dantas.user.controller.response.UserGetResponse;
-import br.dev.dantas.user.controller.response.UserPostResponse;
+import br.dev.dantas.user.controller.usercontroller.request.UserPostRequest;
+import br.dev.dantas.user.controller.usercontroller.request.UserPutRequest;
+import br.dev.dantas.user.controller.usercontroller.response.UserGetResponse;
+import br.dev.dantas.user.controller.usercontroller.response.UserPostResponse;
 import br.dev.dantas.user.domain.mappers.UserMapper;
 import br.dev.dantas.user.service.UserService;
 import jakarta.validation.Valid;
