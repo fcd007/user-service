@@ -14,4 +14,6 @@ public class ProfileGetResponse {
   private Long id;
 
   private String name;
+
+  private String description;
 }
