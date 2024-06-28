@@ -2,6 +2,7 @@ package br.dev.dantas.user.service;
 
 import static br.dev.dantas.user.utils.Constants.USER_PROFILE_NOT_FOUND;
 
+import br.dev.dantas.user.domain.entity.User;
 import br.dev.dantas.user.domain.entity.UserProfile;
 import br.dev.dantas.user.repository.config.UserProfileRepository;
 import exception.NotFoundException;
@@ -20,6 +21,11 @@ public class UserProfileService {
   public List<UserProfile> findAll() {
     return repository.findAll();
   }
+
+  public List<User> findAllUsersByProfileId(Long id) {
+    return repository.findAllUsersByProfileId(id);
+  }
+
 
   public UserProfile save(UserProfile userProfile) {
     return repository.save(userProfile);

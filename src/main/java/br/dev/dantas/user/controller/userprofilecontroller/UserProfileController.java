@@ -7,6 +7,7 @@ import br.dev.dantas.user.controller.userprofilecontroller.request.UserProfilePo
 import br.dev.dantas.user.controller.userprofilecontroller.request.UserProfilePutRequest;
 import br.dev.dantas.user.controller.userprofilecontroller.response.UserProfileGetResponse;
 import br.dev.dantas.user.controller.userprofilecontroller.response.UserProfilePostResponse;
+import br.dev.dantas.user.domain.entity.User;
 import br.dev.dantas.user.domain.mappers.UserProfileMapper;
 import br.dev.dantas.user.service.UserProfileService;
 import jakarta.validation.Valid;
@@ -29,7 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(path = {V1_PATH_DEFAULT, V1_PATH_OTHER})
 @Log4j2
 @RequiredArgsConstructor
-public class UserProfileController implements IUserProfileController{
+public class UserProfileController implements IUserProfileController {
 
   private final UserProfileService userProfileService;
   private final UserProfileMapper mapper;
@@ -45,6 +46,15 @@ public class UserProfileController implements IUserProfileController{
     return ResponseEntity.ok(userProfileGetResponses);
   }
 
+  @GetMapping("profiles/{id}/users")
+  public ResponseEntity<List<User>> listUsersByProfileId(@PathVariable Long id) {
+    log.info("Request received to list all users by profile id, param id '{}' ", id);
+
+    var userProfiles = userProfileService.findAllUsersByProfileId(id);
+
+    return ResponseEntity.ok(userProfiles);
+  }
+
   @GetMapping("{id}")
   public ResponseEntity<UserProfileGetResponse> findById(@PathVariable @Valid Long id) {
     log.info("Request received find profile by id '{}' ", id);
@@ -56,7 +66,8 @@ public class UserProfileController implements IUserProfileController{
   }
 
   @PostMapping
-  public ResponseEntity<UserProfilePostResponse> save(@RequestBody @Valid UserProfilePostRequest request) {
+  public ResponseEntity<UserProfilePostResponse> save(
+      @RequestBody @Valid UserProfilePostRequest request) {
     log.info("Request create user profile post method '{}' ", request);
 
     var userProfile = mapper.toUserProfile(request);
