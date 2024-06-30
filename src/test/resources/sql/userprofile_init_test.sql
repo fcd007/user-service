@@ -1,0 +1,5 @@
+insert into "user" (id, first_name,last_name, email) values (1, 'Lucas','Santos','lucas@test.com.br')
+insert into "user" (id, first_name,last_name, email) values (2, 'Leticia','Pausini','leticia@test.com.br')
+insert into "profile" (id, name, description, created_at, last_updated_on) values (1, 'admin','profile role admin', now(), now())
+insert into "user_profile" (id, user_id, profile_id) values (1,1,1)
+insert into "user_profile" (id, user_id, profile_id) values (2,2,1)
