@@ -45,8 +45,8 @@ class ProfileServiceTest {
   @Order(1)
   void findAll_ReturnsAllProfiles_WhenSuccessful() {
     BDDMockito.when(repository.findAll()).thenReturn(this.profiles);
-    service.findAll(null);
-    Assertions.assertThat(profiles).hasSameElementsAs(this.profiles);
+    var list = service.findAll(null);
+    Assertions.assertThat(list).hasSameElementsAs(this.profiles);
   }
 
   @Test

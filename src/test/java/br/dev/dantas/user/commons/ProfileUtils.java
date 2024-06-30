@@ -40,4 +40,13 @@ public class ProfileUtils {
         .lastUpdatedOn(LocalDateTime.now())
         .build();
   }
+
+  public Profile newProfileSaved() {
+    return Profile.builder()
+        .id(99L).name("Test")
+        .description("Profile user test")
+        .createdAt(LocalDateTime.now())
+        .lastUpdatedOn(LocalDateTime.now())
+        .build();
+  }
 }

@@ -46,8 +46,8 @@ class UserServiceTest {
   void findAll_ReturnsAllUsers_WhenSuccessful() {
     BDDMockito.when(repository.findAll()).thenReturn(this.users);
 
-    var users = service.findAll();
-    Assertions.assertThat(users).hasSameElementsAs(this.users);
+    var list = service.findAll();
+    Assertions.assertThat(list).hasSameElementsAs(this.users);
   }
 
   @Test
