@@ -2,6 +2,8 @@ package br.dev.dantas.user.controller;
 
 import static br.dev.dantas.user.controller.profilecontroller.IProfileController.V1_PATH_DEFAULT;
 
+import br.dev.dantas.user.commons.ProfileUtils;
+import br.dev.dantas.user.controller.profilecontroller.response.ProfilePostResponse;
 import br.dev.dantas.user.domain.entity.Profile;
 import java.util.List;
 import java.util.Objects;
@@ -13,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.jdbc.Sql;
@@ -23,13 +26,17 @@ class ProfileControllerIT {
   @Autowired
   private TestRestTemplate testRestTemplate;
 
+  @Autowired
+  ProfileUtils profileUtils;
+
 
   @Test
   @DisplayName("findAll() returns a list with all profiles")
   @Order(1)
   @Sql("/sql/init_two_profiles.sql")
   void findAll_ReturnsAllUsers_WhenSuccessful() {
-    var typeReference = new ParameterizedTypeReference<List<Profile>>(){};
+    var typeReference = new ParameterizedTypeReference<List<Profile>>() {
+    };
     var response = testRestTemplate.exchange(V1_PATH_DEFAULT, HttpMethod.GET, null, typeReference);
 
     Assertions.assertThat(response).isNotNull();
@@ -41,5 +48,31 @@ class ProfileControllerIT {
       Assertions.assertThat(profile.getName()).isNotNull();
       Assertions.assertThat(profile.getDescription()).isNotNull();
     });
+  }
+
+  @Test
+  @DisplayName("findAll() returns a list with all profiles")
+  @Order(2)
+  void findAll_ReturnsAllEmpty_WhenNoUsersAreFound() {
+    var typeReference = new ParameterizedTypeReference<List<Profile>>() {
+    };
+    var response = testRestTemplate.exchange(V1_PATH_DEFAULT, HttpMethod.GET, null, typeReference);
+
+    Assertions.assertThat(response).isNotNull();
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    Assertions.assertThat(response.getBody()).isNotNull().isEmpty();
+  }
+
+  @Test
+  @DisplayName("save() create a profile")
+  @Order(3)
+  void save_CreateProfile_WhenSuccessful() {
+    var profileToSave = profileUtils.newProfileToSave();
+
+    var response = testRestTemplate.exchange(V1_PATH_DEFAULT, HttpMethod.POST, new HttpEntity<>(profileToSave), ProfilePostResponse.class);
+
+    Assertions.assertThat(response).isNotNull();
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+    Assertions.assertThat(response.getBody()).isNotNull().hasNoNullFieldsOrProperties();
   }
 }
