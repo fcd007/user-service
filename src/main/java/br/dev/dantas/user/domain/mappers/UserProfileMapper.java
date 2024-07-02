@@ -4,6 +4,7 @@ import br.dev.dantas.user.controller.userprofilecontroller.request.UserProfilePo
 import br.dev.dantas.user.controller.userprofilecontroller.request.UserProfilePutRequest;
 import br.dev.dantas.user.controller.userprofilecontroller.response.UserProfileGetResponse;
 import br.dev.dantas.user.controller.userprofilecontroller.response.UserProfilePostResponse;
+import br.dev.dantas.user.controller.userprofilecontroller.response.UserProfileUsersGetResponse;
 import br.dev.dantas.user.domain.entity.UserProfile;
 import java.util.List;
 import org.mapstruct.Mapper;
@@ -20,6 +21,8 @@ public interface UserProfileMapper {
   UserProfilePostResponse toUserProfilePostResponse(UserProfile userProfile);
 
   UserProfileGetResponse toUserProfileGetResponse(UserProfile userProfile);
+
+  UserProfileUsersGetResponse toUserProfileUsersGetResponse(UserProfile userProfile);
 
   List<UserProfileGetResponse> toUserProfileGetResponseList(List<UserProfile> userProfile);
 }

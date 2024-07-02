@@ -1,0 +1,2 @@
+insert into "profile" (id, name, description, created_at, last_updated_on) values (1, 'admin','profile role admin', current_date, current_date)
+insert into "profile" (id, name, description, created_at, last_updated_on) values (2, 'develop','profile role develop', current_date, current_date)
