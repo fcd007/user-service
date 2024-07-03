@@ -3,6 +3,7 @@ package br.dev.dantas.user.controller;
 import static br.dev.dantas.user.controller.profilecontroller.IProfileController.V1_PATH_DEFAULT;
 
 import br.dev.dantas.user.commons.ProfileUtils;
+import br.dev.dantas.user.configuration.TestContainersConfiguration;
 import br.dev.dantas.user.controller.profilecontroller.response.ProfilePostResponse;
 import br.dev.dantas.user.domain.entity.Profile;
 import java.util.List;
@@ -14,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.context.annotation.Import;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -21,6 +23,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.context.jdbc.Sql;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@Import(TestContainersConfiguration.class)
 class ProfileControllerIT {
 
   @Autowired
@@ -31,7 +34,7 @@ class ProfileControllerIT {
 
 
   @Test
-  @DisplayName("findAll() returns a list with all profiles")
+  @DisplayName("findAll() returns a list with all profiles when successful")
   @Order(1)
   @Sql("/sql/init_two_profiles.sql")
   void findAll_ReturnsAllUsers_WhenSuccessful() {
@@ -51,8 +54,9 @@ class ProfileControllerIT {
   }
 
   @Test
-  @DisplayName("findAll() returns a list with all profiles")
+  @DisplayName("findAll() returns a list empty when no profiles are found")
   @Order(2)
+  @Sql("/sql/clean_two_profiles.sql")
   void findAll_ReturnsAllEmpty_WhenNoUsersAreFound() {
     var typeReference = new ParameterizedTypeReference<List<Profile>>() {
     };
@@ -64,7 +68,7 @@ class ProfileControllerIT {
   }
 
   @Test
-  @DisplayName("save() create a profile")
+  @DisplayName("save() create a profile when successful")
   @Order(3)
   void save_CreateProfile_WhenSuccessful() {
     var profileToSave = profileUtils.newProfileToSave();

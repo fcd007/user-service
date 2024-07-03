@@ -77,7 +77,7 @@ class ProfileControllerTest {
   }
 
   @Test
-  @DisplayName("findAll() returns a list with all profiles")
+  @DisplayName("findAll() returns a list empty when no profiles are found")
   @Order(2)
   void findAll_ReturnsAllEmpty_WhenNoUsersAreFound() throws Exception {
     var response = fileUtils.readResourceFile("profile/get-all-profiles-empty-list-200.json");
