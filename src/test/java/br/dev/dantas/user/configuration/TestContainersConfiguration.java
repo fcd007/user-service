@@ -1,6 +1,6 @@
 package br.dev.dantas.user.configuration;
 
-import static br.dev.dantas.user.configuration.IntegrationTestContainers.mysqlContainer;
+import static br.dev.dantas.user.configuration.IntegrationTestContainers.MY_SQL_CONTAINER;
 
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.testcontainers.context.ImportTestcontainers;
@@ -15,6 +15,6 @@ public class TestContainersConfiguration {
   @Bean
   @ServiceConnection
   public MySQLContainer<?> mySQLContainer() {
-    return mysqlContainer;
+    return MY_SQL_CONTAINER;
   }
 }

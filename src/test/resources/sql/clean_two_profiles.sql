@@ -1,1 +1,1 @@
-delete from profile
+delete from profile;
