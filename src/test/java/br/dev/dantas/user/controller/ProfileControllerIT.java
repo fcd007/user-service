@@ -19,16 +19,19 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.jdbc.Sql;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@DirtiesContext(classMode = ClassMode.BEFORE_CLASS)
 class ProfileControllerIT extends IntegrationTestContainers {
 
   @Autowired
   private TestRestTemplate testRestTemplate;
 
   @Autowired
-  ProfileUtils profileUtils;
+  private ProfileUtils profileUtils;
 
 
   @Test
