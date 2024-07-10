@@ -41,7 +41,6 @@ class ProfileControllerRestAssuredIT extends IntegrationTestContainers {
   @Order(1)
   @Sql("/sql/init_two_profiles_rest_assured.sql")
   void findAll_ReturnsAllUsers_WhenSuccessful() throws Exception {
-    var response = fileUtils.readResourceFile("profile/get-all-profile-rest-assured-200.json");
 
     RestAssured
         .given()

@@ -1,15 +1,17 @@
 package br.dev.dantas.user.configuration;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.MySQLContainer;
 
+@Log4j2
+@DirtiesContext(classMode = ClassMode.BEFORE_CLASS)
 public class IntegrationTestContainers {
 
   protected static final MySQLContainer<?> MY_SQL_CONTAINER = new MySQLContainer<>("mysql:8.0.33");
-  private static final Logger log = LoggerFactory.getLogger(IntegrationTestContainers.class);
 
   static {
     log.info("Starting MySQL container...");
