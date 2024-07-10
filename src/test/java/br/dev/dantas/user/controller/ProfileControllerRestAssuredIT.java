@@ -7,16 +7,21 @@ import br.dev.dantas.user.commons.ProfileUtils;
 import br.dev.dantas.user.configuration.IntegrationTestContainers;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import java.util.Collections;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class ProfileControllerRestAssuredIT extends IntegrationTestContainers {
@@ -53,5 +58,22 @@ class ProfileControllerRestAssuredIT extends IntegrationTestContainers {
         .body("id", Matchers.hasItems(1, 2, 3))
         .body("name", Matchers.hasItems("admin", "develop", "test"))
         .body("description",Matchers.hasItems("profile role admin", "profile role develop", "profile role test"));
+  }
+
+  @Test
+  @DisplayName("findAll() returns a list empty when no profiles are found")
+  @Order(2)
+  void findAll_ReturnsAllEmpty_WhenNoUsersAreFound() throws Exception {
+    var response = fileUtils.readResourceFile("profile/get-all-profiles-empty-list-200.json");
+
+    RestAssured
+        .given()
+        .contentType(ContentType.JSON).accept(ContentType.JSON)
+        .when()
+        .get(V1_PATH_DEFAULT)
+        .then()
+        .statusCode(HttpStatus.OK.value())
+        .log().all()
+        .body(Matchers.equalTo(response));
   }
 }
