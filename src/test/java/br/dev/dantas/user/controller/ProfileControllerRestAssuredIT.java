@@ -8,16 +8,20 @@ import br.dev.dantas.user.configuration.IntegrationTestContainers;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import java.util.Collections;
+import net.javacrumbs.jsonunit.assertj.JsonAssertion;
+import net.javacrumbs.jsonunit.assertj.JsonAssertions;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
@@ -75,5 +79,33 @@ class ProfileControllerRestAssuredIT extends IntegrationTestContainers {
         .statusCode(HttpStatus.OK.value())
         .log().all()
         .body(Matchers.equalTo(response));
+  }
+
+  @Test
+  @DisplayName("save() create a profile")
+  @Order(3)
+  void save_CreateProfile_WhenSuccessful() throws Exception {
+    var request = fileUtils.readResourceFile("profile/post-request-profile-rest-assured-200.json");
+    var expectedResponse = fileUtils.readResourceFile("profile/post-response-profile-rest-assured-201.json");
+
+    var response = RestAssured
+        .given()
+        .contentType(ContentType.JSON).accept(ContentType.JSON)
+        .body(request)
+        .when()
+        .post(V1_PATH_DEFAULT)
+        .then()
+        .statusCode(HttpStatus.CREATED.value())
+        .log().all()
+        .extract().response().body().asString();
+
+    JsonAssertions.assertThatJson(response)
+        .node("id")
+        .asNumber()
+        .isPositive();
+
+    JsonAssertions.assertThatJson(response)
+        .whenIgnoringPaths("id")
+        .isEqualTo(expectedResponse);
   }
 }
