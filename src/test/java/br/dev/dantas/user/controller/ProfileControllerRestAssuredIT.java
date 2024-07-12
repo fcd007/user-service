@@ -8,13 +8,21 @@ import br.dev.dantas.user.configuration.IntegrationTestContainers;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Stream;
 import net.javacrumbs.jsonunit.assertj.JsonAssertion;
 import net.javacrumbs.jsonunit.assertj.JsonAssertions;
+import net.javacrumbs.jsonunit.core.Option;
+import org.assertj.core.api.Assertions;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -91,12 +99,12 @@ class ProfileControllerRestAssuredIT extends IntegrationTestContainers {
     var response = RestAssured
         .given()
         .contentType(ContentType.JSON).accept(ContentType.JSON)
+        .log().all()
         .body(request)
         .when()
         .post(V1_PATH_DEFAULT)
         .then()
         .statusCode(HttpStatus.CREATED.value())
-        .log().all()
         .extract().response().body().asString();
 
     JsonAssertions.assertThatJson(response)
@@ -107,5 +115,41 @@ class ProfileControllerRestAssuredIT extends IntegrationTestContainers {
     JsonAssertions.assertThatJson(response)
         .whenIgnoringPaths("id")
         .isEqualTo(expectedResponse);
+  }
+
+  @ParameterizedTest
+  @MethodSource("postProfileBadRequestSource")
+  @DisplayName("save() returns bad request when fields are invalid")
+  @Order(3)
+  void save_ReturnsBadRequest_WhenFieldAreInvalid(String requestFileName, String responseFileName) throws Exception {
+    var request = fileUtils.readResourceFile("profile/%s".formatted(requestFileName));
+    var responseExpected = fileUtils.readResourceFile("profile/%s".formatted(responseFileName));
+
+    var response = RestAssured
+        .given()
+        .contentType(ContentType.JSON).accept(ContentType.JSON)
+        .log().all()
+        .body(request)
+        .when()
+        .post(V1_PATH_DEFAULT)
+        .then()
+        .statusCode(HttpStatus.BAD_REQUEST.value())
+        .extract().response().body().asString();
+
+    JsonAssertions.assertThatJson(response)
+        .node("timestamp")
+        .asString()
+        .isNotEmpty();
+
+    JsonAssertions.assertThatJson(response)
+        .whenIgnoringPaths("timestamp")
+        .when(Option.IGNORING_ARRAY_ORDER)
+        .isEqualTo(responseExpected);
+  }
+
+  private static Stream<Arguments> postProfileBadRequestSource() {
+
+    return Stream.of(Arguments.of("post-request-profile-empty-fields-400.json", "post-response-profile-empty-fields-400.json"),
+        Arguments.of("post-request-profile-blank-fields-400.json", "post-response-profile-blank-fields-400.json"));
   }
 }
