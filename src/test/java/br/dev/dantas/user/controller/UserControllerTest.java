@@ -1,5 +1,7 @@
 package br.dev.dantas.user.controller;
 
+import static br.dev.dantas.user.controller.usercontroller.IUserController.V1_PATH_DEFAULT;
+
 import br.dev.dantas.user.commons.FileUtils;
 import br.dev.dantas.user.commons.UserUtils;
 import br.dev.dantas.user.controller.usercontroller.IUserController;
@@ -70,7 +72,7 @@ class UserControllerTest {
 
     BDDMockito.when(userService.findAll()).thenReturn(userUtils.newUsersList());
 
-    mockMvc.perform(MockMvcRequestBuilders.get(IUserController.V1_PATH_DEFAULT))
+    mockMvc.perform(MockMvcRequestBuilders.get(V1_PATH_DEFAULT))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.content().json(response));
   }
@@ -83,7 +85,7 @@ class UserControllerTest {
 
     BDDMockito.when(userService.findAll()).thenReturn(Collections.emptyList());
 
-    mockMvc.perform(MockMvcRequestBuilders.get(IUserController.V1_PATH_DEFAULT))
+    mockMvc.perform(MockMvcRequestBuilders.get(V1_PATH_DEFAULT))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.content().json(response));
   }
@@ -100,7 +102,7 @@ class UserControllerTest {
         .findFirst().orElse(null);
     BDDMockito.when(userService.findById(id)).thenReturn(userFound);
 
-    mockMvc.perform(MockMvcRequestBuilders.get(IUserController.V1_PATH_DEFAULT + "/{id}", id))
+    mockMvc.perform(MockMvcRequestBuilders.get(V1_PATH_DEFAULT + "/{id}", id))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.content().json(response));
   }
@@ -113,7 +115,7 @@ class UserControllerTest {
     BDDMockito.when(userService.findById(ArgumentMatchers.any()))
         .thenThrow(new ResponseStatusException(HttpStatus.NOT_FOUND));
 
-    mockMvc.perform(MockMvcRequestBuilders.get(IUserController.V1_PATH_DEFAULT + "/{id}", id))
+    mockMvc.perform(MockMvcRequestBuilders.get(V1_PATH_DEFAULT + "/{id}", id))
         .andDo(MockMvcResultHandlers.print())
         .andExpect(MockMvcResultMatchers.status().isNotFound());
   }
@@ -128,7 +130,7 @@ class UserControllerTest {
     var userToBeSaved = userUtils.newUserToSave();
     BDDMockito.when(userService.save(ArgumentMatchers.any())).thenReturn(userToBeSaved);
 
-    mockMvc.perform(MockMvcRequestBuilders.post(IUserController.V1_PATH_DEFAULT).content(request)
+    mockMvc.perform(MockMvcRequestBuilders.post(V1_PATH_DEFAULT).content(request)
             .contentType(MediaType.APPLICATION_JSON)).andDo(MockMvcResultHandlers.print()).andExpect(
             MockMvcResultMatchers.content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
         .andExpect(MockMvcResultMatchers.status().isCreated())
@@ -144,7 +146,7 @@ class UserControllerTest {
     var request = fileUtils.readResourceFile("user/%s".formatted(fileName));
 
     var mvcResult = mockMvc.perform(
-            MockMvcRequestBuilders.post(IUserController.V1_PATH_DEFAULT).content(request)
+            MockMvcRequestBuilders.post(V1_PATH_DEFAULT).content(request)
                 .contentType(MediaType.APPLICATION_JSON)).andDo(MockMvcResultHandlers.print())
         .andExpect(MockMvcResultMatchers.status().isBadRequest()).andReturn();
 
@@ -161,7 +163,7 @@ class UserControllerTest {
   void delete_RemovesUser_WhenSuccessFul() throws Exception {
     var id = 1L;
     BDDMockito.doNothing().when(userService).delete(ArgumentMatchers.any());
-    mockMvc.perform(MockMvcRequestBuilders.delete(IUserController.V1_PATH_DEFAULT + "/{id}", id))
+    mockMvc.perform(MockMvcRequestBuilders.delete(V1_PATH_DEFAULT + "/{id}", id))
         .andDo(MockMvcResultHandlers.print())
         .andExpect(MockMvcResultMatchers.status().isNoContent());
   }
@@ -171,10 +173,10 @@ class UserControllerTest {
   @Order(8)
   void delete_ThrowResponseStatusException_WhenNoUserIsFound() throws Exception {
     var id = 10L;
-    BDDMockito.doThrow(new ResponseStatusException(HttpStatus.NOT_FOUND)).when(userService)
-        .delete(id);
 
-    mockMvc.perform(MockMvcRequestBuilders.delete(IUserController.V1_PATH_DEFAULT + "/{id}", id))
+    BDDMockito.doThrow(new ResponseStatusException(HttpStatus.NOT_FOUND)).when(userService).delete(id);
+
+    mockMvc.perform(MockMvcRequestBuilders.delete(V1_PATH_DEFAULT + "/{id}", id).contentType(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         .andExpect(MockMvcResultMatchers.status().isNotFound());
   }
@@ -187,7 +189,7 @@ class UserControllerTest {
 
     BDDMockito.doNothing().when(userService).update(ArgumentMatchers.any());
 
-    mockMvc.perform(MockMvcRequestBuilders.put(IUserController.V1_PATH_DEFAULT).content(request)
+    mockMvc.perform(MockMvcRequestBuilders.put(V1_PATH_DEFAULT).content(request)
             .contentType(MediaType.APPLICATION_JSON)).andDo(MockMvcResultHandlers.print())
         .andExpect(MockMvcResultMatchers.status().isNoContent());
   }
@@ -202,7 +204,7 @@ class UserControllerTest {
     BDDMockito.doThrow(new ResponseStatusException(HttpStatus.NOT_FOUND)).when(userService)
         .update(userToUpdated);
 
-    mockMvc.perform(MockMvcRequestBuilders.put(IUserController.V1_PATH_DEFAULT).content(request)
+    mockMvc.perform(MockMvcRequestBuilders.put(V1_PATH_DEFAULT).content(request)
             .contentType(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         .andExpect(MockMvcResultMatchers.status().isNoContent());
@@ -217,7 +219,7 @@ class UserControllerTest {
     var request = fileUtils.readResourceFile("user/%s".formatted(fileName));
 
     var mvcResult = mockMvc.perform(
-            MockMvcRequestBuilders.put(IUserController.V1_PATH_DEFAULT).content(request)
+            MockMvcRequestBuilders.put(V1_PATH_DEFAULT).content(request)
                 .contentType(MediaType.APPLICATION_JSON)).andDo(MockMvcResultHandlers.print())
         .andExpect(MockMvcResultMatchers.status().isBadRequest()).andReturn();
 

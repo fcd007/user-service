@@ -6,9 +6,12 @@ import br.dev.dantas.user.commons.FileUtils;
 import br.dev.dantas.user.commons.UserUtils;
 import br.dev.dantas.user.configuration.IntegrationTestContainers;
 import br.dev.dantas.user.controller.profilecontroller.IProfileController;
+import br.dev.dantas.user.controller.usercontroller.IUserController;
 import br.dev.dantas.user.repository.config.UserRepository;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import java.util.List;
+import java.util.Objects;
 import net.javacrumbs.jsonunit.assertj.JsonAssertions;
 import net.javacrumbs.jsonunit.core.Option;
 import org.assertj.core.api.Assertions;
@@ -17,11 +20,20 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.mockito.ArgumentMatchers;
+import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.web.server.ResponseStatusException;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class UserControllerRestAssuredIT extends IntegrationTestContainers {
@@ -128,6 +140,81 @@ class UserControllerRestAssuredIT extends IntegrationTestContainers {
   void findById_ThrowResponseStatusException_WhenNoUserIsFound() throws Exception {
     var responseExpected = fileUtils.readResourceFile("user/get-user-by-id-400.json");
 
+    var response = RestAssured
+        .given()
+        .contentType(ContentType.JSON).accept(ContentType.JSON)
+        .log().all()
+        .when()
+        .get(V1_PATH_DEFAULT + "/{id}", 1999)
+        .then()
+        .statusCode(HttpStatus.NOT_FOUND.value())
+        .log().all()
+        .extract().response().body().asString();
+
+    JsonAssertions.assertThatJson(response)
+        .node("timestamp")
+        .asString()
+        .isNotEmpty();
+
+    JsonAssertions.assertThatJson(response)
+        .whenIgnoringPaths("timestamp")
+        .when(Option.IGNORING_ARRAY_ORDER)
+        .isEqualTo(responseExpected);
+  }
+
+  @Test
+  @DisplayName("save() create a user")
+  @Order(5)
+  void save_CreateUser_WhenSuccessful() throws Exception {
+    var request = fileUtils.readResourceFile("user/post-request-user-200.json");
+    var responseExpected = fileUtils.readResourceFile("user/post-response-user-201.json");
+
+    var response = RestAssured
+        .given()
+        .contentType(ContentType.JSON).accept(ContentType.JSON)
+        .log().all()
+        .body(request)
+        .when()
+        .post(V1_PATH_DEFAULT)
+        .then()
+        .statusCode(HttpStatus.CREATED.value())
+        .extract().response().body().asString();
+
+    JsonAssertions.assertThatJson(response)
+        .node("id")
+        .asNumber()
+        .isPositive();
+
+    JsonAssertions.assertThatJson(response)
+        .whenIgnoringPaths("id")
+        .isEqualTo(responseExpected);
+  }
+
+  @Test
+  @DisplayName("delete() removes a user")
+  @Order(6)
+  @Sql("/sql/init_user_test_rest_assured.sql")
+  void delete_RemovesUser_WhenSuccessFul() throws Exception {
+    var users = userRepository.findAll();
+    Assertions.assertThat(users).hasSize(1);
+
+    RestAssured
+        .given()
+        .log().all()
+        .contentType(ContentType.JSON).accept(ContentType.JSON)
+        .when()
+        .delete(V1_PATH_DEFAULT + "/{id}", users.get(0).getId())
+        .then()
+        .statusCode(HttpStatus.NO_CONTENT.value())
+        .log().all();
+  }
+
+  @Test
+  @DisplayName("delete() removes a throw ResponseStatusException not found to be delete")
+  @Order(7)
+  void delete_ThrowResponseStatusException_WhenNoUserIsFound() throws Exception {
+
+    var responseExpected = fileUtils.readResourceFile("user/get-user-by-id-400.json");
     var response = RestAssured
         .given()
         .contentType(ContentType.JSON).accept(ContentType.JSON)
