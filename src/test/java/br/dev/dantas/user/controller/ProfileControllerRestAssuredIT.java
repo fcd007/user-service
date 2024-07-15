@@ -87,7 +87,7 @@ class ProfileControllerRestAssuredIT extends IntegrationTestContainers {
   @Order(3)
   void save_CreateProfile_WhenSuccessful() throws Exception {
     var request = fileUtils.readResourceFile("profile/post-request-profile-rest-assured-200.json");
-    var expectedResponse = fileUtils.readResourceFile(
+    var responseExpected = fileUtils.readResourceFile(
         "profile/post-response-profile-rest-assured-201.json");
 
     var response = RestAssured
@@ -108,7 +108,7 @@ class ProfileControllerRestAssuredIT extends IntegrationTestContainers {
 
     JsonAssertions.assertThatJson(response)
         .whenIgnoringPaths("id")
-        .isEqualTo(expectedResponse);
+        .isEqualTo(responseExpected);
   }
 
   @ParameterizedTest

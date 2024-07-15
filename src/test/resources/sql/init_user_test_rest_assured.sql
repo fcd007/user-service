@@ -1,0 +1,1 @@
+insert into user (id, first_name,last_name, email) values (10, 'Adele','Dinner','adele@gmail.com');
