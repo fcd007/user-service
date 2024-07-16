@@ -329,7 +329,7 @@ class UserControllerRestAssuredIT extends IntegrationTestContainers {
         .log().all()
         .body(request)
         .when()
-        .post(V1_PATH_DEFAULT)
+        .put(V1_PATH_DEFAULT)
         .then()
         .statusCode(HttpStatus.BAD_REQUEST.value())
         .extract().response().body().asString();
