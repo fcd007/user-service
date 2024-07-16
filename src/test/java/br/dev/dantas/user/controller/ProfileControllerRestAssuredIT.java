@@ -144,9 +144,7 @@ class ProfileControllerRestAssuredIT extends IntegrationTestContainers {
 
   private static Stream<Arguments> postProfileBadRequestSource() {
 
-    return Stream.of(Arguments.of("post-request-profile-empty-fields-400.json",
-            "post-response-profile-empty-fields-400.json"),
-        Arguments.of("post-request-profile-blank-fields-400.json",
-            "post-response-profile-blank-fields-400.json"));
+    return Stream.of(Arguments.of("post-request-profile-empty-fields-400.json", "post-response-profile-empty-fields-400.json"),
+        Arguments.of("post-request-profile-blank-fields-400.json", "post-response-profile-blank-fields-400.json"));
   }
 }

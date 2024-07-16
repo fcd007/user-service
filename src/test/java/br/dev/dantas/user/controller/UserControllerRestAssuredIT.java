@@ -5,13 +5,10 @@ import static br.dev.dantas.user.controller.usercontroller.IUserController.V1_PA
 import br.dev.dantas.user.commons.FileUtils;
 import br.dev.dantas.user.commons.UserUtils;
 import br.dev.dantas.user.configuration.IntegrationTestContainers;
-import br.dev.dantas.user.controller.profilecontroller.IProfileController;
-import br.dev.dantas.user.controller.usercontroller.IUserController;
 import br.dev.dantas.user.repository.config.UserRepository;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import java.util.List;
-import java.util.Objects;
+import java.util.stream.Stream;
 import net.javacrumbs.jsonunit.assertj.JsonAssertions;
 import net.javacrumbs.jsonunit.core.Option;
 import org.assertj.core.api.Assertions;
@@ -21,19 +18,13 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.mockito.ArgumentMatchers;
-import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.springframework.web.server.ResponseStatusException;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class UserControllerRestAssuredIT extends IntegrationTestContainers {
@@ -198,10 +189,8 @@ class UserControllerRestAssuredIT extends IntegrationTestContainers {
     var users = userRepository.findAll();
     Assertions.assertThat(users).hasSize(1);
 
-    RestAssured
-        .given()
+    RestAssured.given().contentType(ContentType.JSON).accept(ContentType.JSON)
         .log().all()
-        .contentType(ContentType.JSON).accept(ContentType.JSON)
         .when()
         .delete(V1_PATH_DEFAULT + "/{id}", users.get(0).getId())
         .then()
@@ -235,5 +224,91 @@ class UserControllerRestAssuredIT extends IntegrationTestContainers {
         .whenIgnoringPaths("timestamp")
         .when(Option.IGNORING_ARRAY_ORDER)
         .isEqualTo(responseExpected);
+  }
+
+  @Test
+  @DisplayName("update() updates an user")
+  @Order(8)
+  @Sql("/sql/init_user_test_rest_assured.sql")
+  void update_UpdateUser_WhenSuccessFul() throws Exception {
+    var request = fileUtils.readResourceFile("user/put-request-user-204.json");
+    var users = userRepository.findAll();
+    Assertions.assertThat(users).hasSize(1);
+
+    request.replace("1", users.get(0).getId().toString());
+
+    RestAssured.given().contentType(ContentType.JSON).accept(ContentType.JSON)
+        .log().all()
+        .body(request)
+        .when()
+        .put(V1_PATH_DEFAULT)
+        .then()
+        .log().all()
+        .statusCode(HttpStatus.NO_CONTENT.value());
+  }
+
+  @Test
+  @DisplayName("update() updates a throw ResponseStatusException not found")
+  @Order(10)
+  void update_ThrowResponseStatusException_WhenNoUserIsFound() throws Exception {
+    var request = fileUtils.readResourceFile("user/put-request-user-404.json");
+    var responseExpected = fileUtils.readResourceFile("user/put-request-user-not-found-404.json");
+
+    var response = RestAssured.given().contentType(ContentType.JSON).accept(ContentType.JSON)
+        .log().all()
+        .body(request)
+        .when()
+        .put(V1_PATH_DEFAULT)
+        .then()
+        .log().all()
+        .statusCode(HttpStatus.NOT_FOUND.value())
+        .extract().response().body().asString();
+
+    JsonAssertions.assertThatJson(response)
+        .node("timestamp")
+        .asString()
+        .isNotEmpty();
+
+    JsonAssertions.assertThatJson(response)
+        .whenIgnoringPaths("timestamp")
+        .when(Option.IGNORING_ARRAY_ORDER)
+        .isEqualTo(responseExpected);
+  }
+
+  @ParameterizedTest
+  @MethodSource("postUserBadRequestSource")
+  @DisplayName("update() returns bad request when fields are invalid")
+  @Order(11)
+  void update_ReturnsBadRequest_WhenFieldAreInvalid(String requestFileName, String responseFileName)
+      throws Exception {
+    var request = fileUtils.readResourceFile("user/%s".formatted(requestFileName));
+    var responseExpected = fileUtils.readResourceFile("user/%s".formatted(responseFileName));
+
+    var response = RestAssured
+        .given()
+        .contentType(ContentType.JSON).accept(ContentType.JSON)
+        .log().all()
+        .body(request)
+        .when()
+        .post(V1_PATH_DEFAULT)
+        .then()
+        .statusCode(HttpStatus.BAD_REQUEST.value())
+        .extract().response().body().asString();
+
+    JsonAssertions.assertThatJson(response)
+        .node("timestamp")
+        .asString()
+        .isNotEmpty();
+
+    JsonAssertions.assertThatJson(response)
+        .whenIgnoringPaths("timestamp")
+        .when(Option.IGNORING_ARRAY_ORDER)
+        .isEqualTo(responseExpected);
+  }
+
+  private static Stream<Arguments> postUserBadRequestSource() {
+    return Stream.of(Arguments.of("post-request-user-empty-fields-400.json", "put-response-user-empty-fields-400.json"),
+        Arguments.of("post-request-user-blank-fields-400.json", "put-response-user-blank-fields-400.json"),
+        Arguments.of("post-request-user-invalid-email-400.json", "put-response-user-invalid-email-400.json"));
   }
 }

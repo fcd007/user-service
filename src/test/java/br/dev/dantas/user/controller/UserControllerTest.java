@@ -182,7 +182,7 @@ class UserControllerTest {
   }
 
   @Test
-  @DisplayName("update() updates a user")
+  @DisplayName("update() updates an user")
   @Order(9)
   void update_UpdateUser_WhenSuccessFul() throws Exception {
     var request = fileUtils.readResourceFile("user/put-request-user-204.json");

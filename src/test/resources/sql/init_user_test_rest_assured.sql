@@ -1,1 +1,1 @@
-insert into user (id, first_name,last_name, email) values (10, 'Adele','Dinner','adele@gmail.com');
+insert into user (id, first_name,last_name, email) values (1, 'Adele','Dinner','adele@gmail.com');
