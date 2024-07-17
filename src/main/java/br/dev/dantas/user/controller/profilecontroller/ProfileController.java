@@ -1,7 +1,5 @@
 package br.dev.dantas.user.controller.profilecontroller;
 
-import static br.dev.dantas.user.controller.profilecontroller.IProfileController.*;
-
 import br.dev.dantas.user.controller.profilecontroller.request.ProfilePostRequest;
 import br.dev.dantas.user.controller.profilecontroller.request.ProfilePutRequest;
 import br.dev.dantas.user.controller.profilecontroller.response.ProfileGetResponse;
@@ -25,10 +23,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(path = {V1_PATH_DEFAULT, V1_PATH_OTHER})
+@RequestMapping(path = {IProfileController.V1_PATH_DEFAULT})
 @Log4j2
 @RequiredArgsConstructor
-public class ProfileController {
+public class ProfileController implements IProfileController{
 
   private final ProfileService profileService;
   private final ProfileMapper mapper;

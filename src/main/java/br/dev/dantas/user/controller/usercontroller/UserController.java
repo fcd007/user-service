@@ -22,15 +22,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(path = {IUserController.V1_PATH_DEFAULT, IUserController.V1_PATH_OTHER})
+@RequestMapping(path = {IUserController.V1_PATH_DEFAULT})
 @Log4j2
 @RequiredArgsConstructor
-public class UserController {
+public class UserController implements IUserController {
 
   private final UserMapper userMapper;
   private final UserService userService;
 
   @GetMapping
+  @Override
   public ResponseEntity<List<UserGetResponse>> list() {
     log.info("Request received to list all users");
 
@@ -41,6 +42,7 @@ public class UserController {
   }
 
   @GetMapping("{id}")
+  @Override
   public ResponseEntity<UserGetResponse> findById(@PathVariable Long id) {
     log.info("Request received find user by id '{}'", id);
 
@@ -51,6 +53,7 @@ public class UserController {
   }
 
   @PostMapping
+  @Override
   public ResponseEntity<UserPostResponse> save(@RequestBody @Valid UserPostRequest request) {
     log.info("Request create user post method '{}'", request);
 
@@ -62,6 +65,7 @@ public class UserController {
   }
 
   @DeleteMapping("{id}")
+  @Override
   public ResponseEntity<Void> delete(@PathVariable Long id) {
     log.info("Request received to delete the user by id'{}'", id);
 
@@ -70,6 +74,7 @@ public class UserController {
   }
 
   @PutMapping
+  @Override
   public ResponseEntity<Void> update(@RequestBody @Valid UserPutRequest request) {
     log.info("Request received to update the user '{}'", request);
 

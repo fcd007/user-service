@@ -22,6 +22,7 @@
     <rest-assured.version>5.3.1</rest-assured.version>
     <spring-dotenv.version>4.0.0</spring-dotenv.version>
     <json-unit-assertj.version>3.4.0</json-unit-assertj.version>
+    <springdoc-openapi-starter-webmvc-ui.version>2.6.0</springdoc-openapi-starter-webmvc-ui.version>
   </properties>
   <dependencyManagement>
     <dependencies>
@@ -97,6 +98,12 @@
       <groupId>br.dev.dantas</groupId>
       <artifactId>commons-core</artifactId>
       <version>${commons-core.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springdoc</groupId>
+      <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+      <version>${springdoc-openapi-starter-webmvc-ui.version}</version>
     </dependency>
 
     <dependency>
