@@ -1,6 +1,8 @@
 package br.dev.dantas.user.controller.userprofilecontroller;
 
-import br.dev.dantas.user.controller.usercontroller.IUserController;
+import static br.dev.dantas.user.controller.userprofilecontroller.IUserProfileController.V1_PATH_DEFAULT;
+import static br.dev.dantas.user.controller.userprofilecontroller.IUserProfileController.V1_PATH_OTHER;
+
 import br.dev.dantas.user.controller.userprofilecontroller.request.UserProfilePostRequest;
 import br.dev.dantas.user.controller.userprofilecontroller.request.UserProfilePutRequest;
 import br.dev.dantas.user.controller.userprofilecontroller.response.UserProfileGetResponse;
@@ -26,7 +28,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(path = {IUserController.V1_PATH_DEFAULT})
+@RequestMapping(path = {V1_PATH_DEFAULT, V1_PATH_OTHER})
 @Log4j2
 @RequiredArgsConstructor
 public class UserProfileController implements IUserProfileController {

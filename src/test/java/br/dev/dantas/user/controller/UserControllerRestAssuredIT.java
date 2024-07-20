@@ -306,12 +306,9 @@ class UserControllerRestAssuredIT extends IntegrationTestContainers {
   }
 
   private static Stream<Arguments> postUserBadRequestSource() {
-    return Stream.of(Arguments.of("post-request-user-empty-fields-400.json",
-            "put-response-user-empty-fields-400.json"),
-        Arguments.of("post-request-user-blank-fields-400.json",
-            "put-response-user-blank-fields-400.json"),
-        Arguments.of("post-request-user-invalid-email-400.json",
-            "put-response-user-invalid-email-400.json"));
+    return Stream.of(Arguments.of("post-request-user-empty-fields-400.json", "post-response-user-empty-fields-400.json"),
+        Arguments.of("post-request-user-blank-fields-400.json", "post-response-user-blank-fields-400.json"),
+        Arguments.of("post-request-user-invalid-email-400.json", "post-response-user-invalid-email-400.json"));
   }
 
   @ParameterizedTest
@@ -349,9 +346,7 @@ class UserControllerRestAssuredIT extends IntegrationTestContainers {
   private static Stream<Arguments> updateUserBadRequestSource() {
     return Stream.of(Arguments.of(
             "put-request-user-empty-fields-400.json", "put-response-user-empty-fields-400.json"),
-        Arguments.of("put-request-user-blank-fields-400.json",
-            "put-response-user-blank-fields-400.json"),
-        Arguments.of("put-request-user-invalid-email-400.json",
-            "put-response-user-invalid-email-400.json"));
+        Arguments.of("put-request-user-blank-fields-400.json", "put-response-user-blank-fields-400.json"),
+        Arguments.of("put-request-user-invalid-email-400.json", "put-response-user-invalid-email-400.json"));
   }
 }

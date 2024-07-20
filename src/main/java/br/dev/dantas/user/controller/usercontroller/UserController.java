@@ -1,5 +1,9 @@
 package br.dev.dantas.user.controller.usercontroller;
 
+
+import static br.dev.dantas.user.controller.usercontroller.IUserController.V1_PATH_DEFAULT;
+import static br.dev.dantas.user.controller.usercontroller.IUserController.V1_PATH_OTHER;
+
 import br.dev.dantas.user.controller.usercontroller.request.UserPostRequest;
 import br.dev.dantas.user.controller.usercontroller.request.UserPutRequest;
 import br.dev.dantas.user.controller.usercontroller.response.UserGetResponse;
@@ -22,7 +26,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(path = {IUserController.V1_PATH_DEFAULT})
+@RequestMapping(path = {V1_PATH_DEFAULT, V1_PATH_OTHER})
 @Log4j2
 @RequiredArgsConstructor
 public class UserController implements IUserController {
