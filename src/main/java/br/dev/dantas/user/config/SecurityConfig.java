@@ -20,7 +20,7 @@ public class SecurityConfig {
 
   private static final String[] WHITE_LIST = {"/swagger-ui/index.html", "/v3/api-docs/**",
       "/swagger-ui/**"};
-  private static final String PASSWORD = "1234";
+  private static final String PASSWORD = "Abc@12345678";
   private static final String GUEST = "guest";
   private static final String ADMIN = "admin";
 
