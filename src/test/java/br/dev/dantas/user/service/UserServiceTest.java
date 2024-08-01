@@ -2,7 +2,7 @@ package br.dev.dantas.user.service;
 
 import br.dev.dantas.user.commons.UserUtils;
 import br.dev.dantas.user.domain.entity.User;
-import br.dev.dantas.user.repository.config.UserRepository;
+import br.dev.dantas.user.repository.UserRepository;
 import exception.EmailAllreadyExistsException;
 import java.util.List;
 import java.util.Optional;

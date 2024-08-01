@@ -1,7 +1,7 @@
 package br.dev.dantas.user.service;
 
 import br.dev.dantas.user.domain.entity.User;
-import br.dev.dantas.user.repository.config.UserRepository;
+import br.dev.dantas.user.repository.UserRepository;
 import br.dev.dantas.user.utils.Constants;
 import exception.EmailAllreadyExistsException;
 import exception.NotFoundException;

@@ -4,11 +4,10 @@ import static br.dev.dantas.user.controller.usercontroller.IUserController.V1_PA
 
 import br.dev.dantas.user.commons.FileUtils;
 import br.dev.dantas.user.commons.UserUtils;
-import br.dev.dantas.user.controller.usercontroller.IUserController;
 import br.dev.dantas.user.controller.usercontroller.UserController;
 import br.dev.dantas.user.domain.mappers.UserMapperImpl;
-import br.dev.dantas.user.repository.config.UserData;
-import br.dev.dantas.user.repository.config.UserRepository;
+import br.dev.dantas.user.repository.UserData;
+import br.dev.dantas.user.repository.UserRepository;
 import br.dev.dantas.user.service.UserService;
 import java.util.Collections;
 import java.util.List;

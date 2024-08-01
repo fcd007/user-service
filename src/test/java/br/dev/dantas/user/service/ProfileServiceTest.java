@@ -2,7 +2,7 @@ package br.dev.dantas.user.service;
 
 import br.dev.dantas.user.commons.ProfileUtils;
 import br.dev.dantas.user.domain.entity.Profile;
-import br.dev.dantas.user.repository.config.ProfileRepository;
+import br.dev.dantas.user.repository.ProfileRepository;
 import exception.NameAllreadyExistsException;
 import java.util.List;
 import java.util.Optional;

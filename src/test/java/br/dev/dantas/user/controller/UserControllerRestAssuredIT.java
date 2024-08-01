@@ -5,7 +5,7 @@ import static br.dev.dantas.user.controller.usercontroller.IUserController.V1_PA
 import br.dev.dantas.user.commons.FileUtils;
 import br.dev.dantas.user.commons.UserUtils;
 import br.dev.dantas.user.configuration.IntegrationTestContainers;
-import br.dev.dantas.user.repository.config.UserRepository;
+import br.dev.dantas.user.repository.UserRepository;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import java.util.stream.Stream;

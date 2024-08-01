@@ -3,7 +3,7 @@ package br.dev.dantas.user.service;
 import static br.dev.dantas.user.utils.Constants.*;
 
 import br.dev.dantas.user.domain.entity.Profile;
-import br.dev.dantas.user.repository.config.ProfileRepository;
+import br.dev.dantas.user.repository.ProfileRepository;
 import exception.*;
 import java.util.Collections;
 import java.util.List;

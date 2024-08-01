@@ -4,7 +4,7 @@ import static br.dev.dantas.user.utils.Constants.USER_PROFILE_NOT_FOUND;
 
 import br.dev.dantas.user.domain.entity.User;
 import br.dev.dantas.user.domain.entity.UserProfile;
-import br.dev.dantas.user.repository.config.UserProfileRepository;
+import br.dev.dantas.user.repository.UserProfileRepository;
 import exception.NotFoundException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;

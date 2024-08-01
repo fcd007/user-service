@@ -1,6 +1,7 @@
 package br.dev.dantas.user.repository.config;
 
 import br.dev.dantas.user.configuration.IntegrationTestContainers;
+import br.dev.dantas.user.repository.UserProfileRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;

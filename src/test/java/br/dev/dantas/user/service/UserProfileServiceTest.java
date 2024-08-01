@@ -4,7 +4,7 @@ import br.dev.dantas.user.commons.ProfileUtils;
 import br.dev.dantas.user.commons.UserProfileUtils;
 import br.dev.dantas.user.commons.UserUtils;
 import br.dev.dantas.user.domain.entity.UserProfile;
-import br.dev.dantas.user.repository.config.UserProfileRepository;
+import br.dev.dantas.user.repository.UserProfileRepository;
 import java.util.List;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

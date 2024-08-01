@@ -1,12 +1,10 @@
-package br.dev.dantas.user.repository.config;
+package br.dev.dantas.user.repository;
 
 import br.dev.dantas.user.domain.entity.Profile;
-import br.dev.dantas.user.domain.entity.User;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Getter

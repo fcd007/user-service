@@ -1,4 +1,4 @@
-package br.dev.dantas.user.repository.config;
+package br.dev.dantas.user.repository;
 
 import br.dev.dantas.user.domain.entity.User;
 import br.dev.dantas.user.domain.entity.UserProfile;

@@ -2,6 +2,8 @@ package br.dev.dantas.user.repository.config;
 
 import br.dev.dantas.user.commons.UserUtils;
 import br.dev.dantas.user.domain.entity.User;
+import br.dev.dantas.user.repository.UserData;
+import br.dev.dantas.user.repository.UserHardCodeRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
