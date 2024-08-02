@@ -9,6 +9,7 @@ import br.dev.dantas.user.controller.profilecontroller.response.ProfileGetRespon
 import br.dev.dantas.user.controller.profilecontroller.response.ProfilePostResponse;
 import br.dev.dantas.user.domain.mappers.ProfileMapper;
 import br.dev.dantas.user.service.ProfileService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(path = {V1_PATH_DEFAULT, V1_PATH_OTHER})
 @Log4j2
 @RequiredArgsConstructor
+@SecurityRequirement(name = "bearerAuth")
 public class ProfileController implements IProfileController{
 
   private final ProfileService profileService;

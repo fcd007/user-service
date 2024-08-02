@@ -10,6 +10,7 @@ import br.dev.dantas.user.controller.usercontroller.response.UserGetResponse;
 import br.dev.dantas.user.controller.usercontroller.response.UserPostResponse;
 import br.dev.dantas.user.domain.mappers.UserMapper;
 import br.dev.dantas.user.service.UserService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(path = {V1_PATH_DEFAULT, V1_PATH_OTHER})
 @Log4j2
 @RequiredArgsConstructor
+@SecurityRequirement(name = "bearerAuth")
 public class UserController implements IUserController {
 
   private final UserMapper userMapper;

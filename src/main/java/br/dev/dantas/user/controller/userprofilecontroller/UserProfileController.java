@@ -11,6 +11,7 @@ import br.dev.dantas.user.controller.userprofilecontroller.response.UserProfileU
 import br.dev.dantas.user.domain.entity.User;
 import br.dev.dantas.user.domain.mappers.UserProfileMapper;
 import br.dev.dantas.user.service.UserProfileService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(path = {V1_PATH_DEFAULT, V1_PATH_OTHER})
 @Log4j2
 @RequiredArgsConstructor
+@SecurityRequirement(name = "bearerAuth")
 public class UserProfileController implements IUserProfileController {
 
   private final UserProfileService userProfileService;
