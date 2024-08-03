@@ -30,7 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(path = {V1_PATH_DEFAULT, V1_PATH_OTHER})
 @Log4j2
 @RequiredArgsConstructor
-@SecurityRequirement(name = "bearerAuth")
+@SecurityRequirement(name = "basicAuth")
 public class ProfileController implements IProfileController{
 
   private final ProfileService profileService;
