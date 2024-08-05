@@ -25,4 +25,7 @@ public class UserPutRequest {
 
   @Email(regexp = StringUtility.VALIDAR_EMAIL_REGEX_RFC_5322, message = "the email format is not valid")
   private String email;
+
+  private String password;
+
 }

@@ -25,7 +25,7 @@ public class SecurityConfig {
             auth -> auth
                 .requestMatchers(WHITE_LIST).permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/v1/users").permitAll()
-                .requestMatchers(HttpMethod.DELETE, "api/v1/users/*").hasRole(ADMIN)
+                .requestMatchers(HttpMethod.DELETE, "api/v1/users/*").hasAuthority(ADMIN)
                 .requestMatchers("api/v1/users").hasRole(ADMIN).anyRequest().authenticated())
         .httpBasic(Customizer.withDefaults())
         .build();

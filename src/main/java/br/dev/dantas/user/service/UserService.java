@@ -43,11 +43,20 @@ public class UserService {
     repository.delete(user);
   }
 
-  public void update(User userToUpdate) {
+  public void update(User userToUpdatepatial) {
     //validacao para se existe usuario
-    assertUserExists(userToUpdate);
+    var userSaved = findById(userToUpdatepatial.getId());
+
     //validacao para verificar se email unico
-    assertEmailIsUnique(userToUpdate.getEmail(), userToUpdate.getId());
+    assertEmailIsUnique(userToUpdatepatial.getEmail(), userToUpdatepatial.getId());
+
+    //verificar se user esta trocando senha e roles
+    var password = userToUpdatepatial.getPassword() == null ? userSaved.getPassword() : userToUpdatepatial.getPassword();
+    var roles = userToUpdatepatial.getRoles() == null ? userSaved.getRoles() : userToUpdatepatial.getRoles();
+
+    //criando objeto imutavel
+    var userToUpdate = userToUpdatepatial.withPassword(password).withRoles(roles);
+
     repository.save(userToUpdate);
   }
 
