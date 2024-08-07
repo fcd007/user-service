@@ -70,8 +70,7 @@ class ProfileControllerIT extends IntegrationTestContainers {
   void save_CreateProfile_WhenSuccessful() {
     var profileToSave = profileUtils.newProfileToSave();
 
-    var response = testRestTemplate.exchange(V1_PATH_DEFAULT, HttpMethod.POST,
-        new HttpEntity<>(profileToSave), ProfilePostResponse.class);
+    var response = testRestTemplate.exchange(V1_PATH_DEFAULT, HttpMethod.POST, new HttpEntity<>(profileToSave), ProfilePostResponse.class);
 
     Assertions.assertThat(response).isNotNull();
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
