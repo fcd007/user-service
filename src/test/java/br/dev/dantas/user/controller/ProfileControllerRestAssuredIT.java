@@ -41,6 +41,7 @@ class ProfileControllerRestAssuredIT extends IntegrationTestContainers {
   private int port;
 
   @Autowired
+  @Qualifier("requestSpecificationUser")
   private RequestSpecification requestSpecification;
 
   @BeforeEach
