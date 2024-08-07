@@ -1,5 +1,7 @@
 package br.dev.dantas.user.configuration;
 
+import static br.dev.dantas.user.commons.Constants.*;
+
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
@@ -16,8 +18,8 @@ public class TestRestTemplateConfig {
 
   @Bean
   public TestRestTemplate testRestTemplate() {
-    var uri = new DefaultUriBuilderFactory("http://localhost:" + port);
-    var testRestTemplate = new TestRestTemplate().withBasicAuth("mestre.kame@anime.com.br", "1234");
+    var uri = new DefaultUriBuilderFactory(BASE_URI + port);
+    var testRestTemplate = new TestRestTemplate().withBasicAuth(USERNAME, PASSWORD);
 
     testRestTemplate.setUriTemplateHandler(uri);
     return testRestTemplate;

@@ -5,8 +5,10 @@ import static br.dev.dantas.user.controller.profilecontroller.IProfileController
 import br.dev.dantas.user.commons.FileUtils;
 import br.dev.dantas.user.commons.ProfileUtils;
 import br.dev.dantas.user.configuration.IntegrationTestContainers;
+import br.dev.dantas.user.configuration.RestAssuredConfig;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import io.restassured.specification.RequestSpecification;
 import java.util.stream.Stream;
 import net.javacrumbs.jsonunit.assertj.JsonAssertions;
 import net.javacrumbs.jsonunit.core.Option;
@@ -19,13 +21,14 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.jdbc.Sql;
 
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = RestAssuredConfig.class)
 class ProfileControllerRestAssuredIT extends IntegrationTestContainers {
 
   @Autowired
@@ -37,10 +40,12 @@ class ProfileControllerRestAssuredIT extends IntegrationTestContainers {
   @LocalServerPort
   private int port;
 
+  @Autowired
+  private RequestSpecification requestSpecification;
+
   @BeforeEach
   void setUrl() {
-    RestAssured.baseURI = "http://localhost";
-    RestAssured.port = port;
+    RestAssured.requestSpecification = requestSpecification;
   }
 
   @Test
