@@ -4,6 +4,7 @@ import static br.dev.dantas.user.controller.profilecontroller.IProfileController
 
 import br.dev.dantas.user.commons.FileUtils;
 import br.dev.dantas.user.commons.ProfileUtils;
+import br.dev.dantas.user.config.SecurityConfig;
 import br.dev.dantas.user.controller.profilecontroller.ProfileController;
 import br.dev.dantas.user.domain.mappers.ProfileMapperImpl;
 import br.dev.dantas.user.repository.ProfileData;
@@ -31,6 +32,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
@@ -39,7 +41,8 @@ import org.springframework.web.server.ResponseStatusException;
 
 @WebMvcTest(ProfileController.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@Import({ProfileMapperImpl.class, FileUtils.class, ProfileUtils.class})
+@Import({ProfileMapperImpl.class, FileUtils.class, ProfileUtils.class, SecurityConfig.class})
+@WithMockUser(roles = "ADMIN")
 class ProfileControllerTest {
 
   @Autowired

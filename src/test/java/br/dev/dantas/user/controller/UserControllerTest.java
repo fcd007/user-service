@@ -4,7 +4,9 @@ import static br.dev.dantas.user.controller.usercontroller.IUserController.V1_PA
 
 import br.dev.dantas.user.commons.FileUtils;
 import br.dev.dantas.user.commons.UserUtils;
+import br.dev.dantas.user.config.SecurityConfig;
 import br.dev.dantas.user.controller.usercontroller.UserController;
+import br.dev.dantas.user.domain.mappers.PasswordEncodedMapper;
 import br.dev.dantas.user.domain.mappers.UserMapperImpl;
 import br.dev.dantas.user.repository.UserData;
 import br.dev.dantas.user.repository.UserRepository;
@@ -31,6 +33,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
@@ -39,7 +42,8 @@ import org.springframework.web.server.ResponseStatusException;
 
 @WebMvcTest(UserController.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@Import({UserMapperImpl.class, FileUtils.class, UserUtils.class})
+@Import({UserMapperImpl.class, FileUtils.class, UserUtils.class, SecurityConfig.class})
+@WithMockUser
 class UserControllerTest {
 
   @Autowired
@@ -56,6 +60,9 @@ class UserControllerTest {
 
   @MockBean
   private UserService userService;
+
+  @MockBean
+  private PasswordEncodedMapper passwordEncodedMapper;
 
   @Autowired
   private ResourceLoader resourceLoader;

@@ -4,6 +4,8 @@ import static br.dev.dantas.user.controller.profilecontroller.IProfileController
 
 import br.dev.dantas.user.commons.ProfileUtils;
 import br.dev.dantas.user.configuration.IntegrationTestContainers;
+import br.dev.dantas.user.configuration.TestRestTemplateConfig;
+import br.dev.dantas.user.controller.profilecontroller.ProfileController;
 import br.dev.dantas.user.controller.profilecontroller.response.ProfilePostResponse;
 import br.dev.dantas.user.domain.entity.Profile;
 import java.util.List;
@@ -21,7 +23,8 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.jdbc.Sql;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+    classes = {TestRestTemplateConfig.class})
 class ProfileControllerIT extends IntegrationTestContainers {
 
   @Autowired

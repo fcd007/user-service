@@ -38,9 +38,8 @@ public class ProfileController implements IProfileController{
   private final ProfileMapper mapper;
 
   @GetMapping
-  @PreAuthorize("hasAuthority('ADMIN')")
-  public ResponseEntity<List<ProfileGetResponse>> list(
-      @RequestParam(required = false) String name) {
+  @PreAuthorize("hasRole('ADMIN')")
+  public ResponseEntity<List<ProfileGetResponse>> list(@RequestParam(required = false) String name) {
     log.info("Request received to list all profiles, param name '{}' ", name);
 
     var profiles = profileService.findAll(name);
