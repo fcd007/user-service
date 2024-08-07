@@ -26,9 +26,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.jdbc.SqlMergeMode;
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = RestAssuredConfig.class)
+@Sql("/sql/user_init_login_regular_test.sql")
+@SqlMergeMode(SqlMergeMode.MergeMode.MERGE)
 class ProfileControllerRestAssuredIT extends IntegrationTestContainers {
 
   @Autowired
