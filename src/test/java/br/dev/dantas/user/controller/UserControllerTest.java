@@ -74,7 +74,7 @@ class UserControllerTest {
   @DisplayName("findAll() returns a list with all users")
   @Order(1)
   void findAll_ReturnsAllUsers_WhenSuccessful() throws Exception {
-    var response = fileUtils.readResourceFile("user/get-all-users-200.json");
+    var response = fileUtils.readResourceFile("user/get-all-three-users-200.json");
 
     BDDMockito.when(userService.findAll()).thenReturn(userUtils.newUsersList());
 
