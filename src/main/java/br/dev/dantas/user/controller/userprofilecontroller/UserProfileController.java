@@ -40,8 +40,7 @@ public class UserProfileController implements IUserProfileController {
 
   @GetMapping
   @Override
-  public ResponseEntity<List<UserProfileGetResponse>> list(
-      @RequestParam(required = false) String name) {
+  public ResponseEntity<List<UserProfileGetResponse>> listAllProfiles(@RequestParam(required = false) String name) {
     log.info("Request received to list all user profiles, param name '{}' ", name);
 
     var userProfiles = userProfileService.findAll();
@@ -62,7 +61,7 @@ public class UserProfileController implements IUserProfileController {
 
   @GetMapping("{id}")
   @Override
-  public ResponseEntity<UserProfileUsersGetResponse> findById(@PathVariable @Valid Long id) {
+  public ResponseEntity<UserProfileUsersGetResponse> findProfileById(@PathVariable @Valid Long id) {
     log.info("Request received find profile by id '{}' ", id);
 
     var profile = userProfileService.findById(id);
@@ -73,7 +72,7 @@ public class UserProfileController implements IUserProfileController {
 
   @PostMapping
   @Override
-  public ResponseEntity<UserProfilePostResponse> save(@RequestBody @Valid UserProfilePostRequest request) {
+  public ResponseEntity<UserProfilePostResponse> saveProfile(@RequestBody @Valid UserProfilePostRequest request) {
     log.info("Request create user profile post method '{}' ", request);
 
     var userProfile = mapper.toUserProfile(request);
@@ -85,7 +84,7 @@ public class UserProfileController implements IUserProfileController {
 
   @PutMapping
   @Override
-  public ResponseEntity<Void> update(@RequestBody @Valid UserProfilePutRequest request) {
+  public ResponseEntity<Void> updateProfile(@RequestBody @Valid UserProfilePutRequest request) {
     log.info("Request received to update the user profile '{}' ", request);
 
     var profileToUpdate = mapper.toUserProfile(request);
@@ -96,7 +95,7 @@ public class UserProfileController implements IUserProfileController {
 
   @DeleteMapping("{id}")
   @Override
-  public ResponseEntity<Void> deleteById(@PathVariable @Valid Long id) {
+  public ResponseEntity<Void> deleteProfileById(@PathVariable @Valid Long id) {
     log.info("Request received to delete the user profile by id'{}' ", id);
 
     userProfileService.delete(id);

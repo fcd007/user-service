@@ -18,21 +18,21 @@ public interface IUserProfileController {
   public static final String V1_PATH_OTHER = "/api/v1/user-profiles/";
 
   @Operation(summary = "List all user profiles", description = "List all user profiles")
-  ResponseEntity<List<UserProfileGetResponse>> list(String name);
+  ResponseEntity<List<UserProfileGetResponse>> listAllProfiles(String name);
 
   @Operation(summary = "List all users profiles by profile id", description = "List all users profiles by profile id")
   ResponseEntity<List<User>> listUsersByProfileId(Long id);
 
   @Operation(summary = "Find user profile by id", description = "Find user profile by id")
-  ResponseEntity<UserProfileUsersGetResponse> findById(Long id);
+  ResponseEntity<UserProfileUsersGetResponse> findProfileById(Long id);
 
   @Operation(summary = "Save user profile", description = "Save user profile")
-  ResponseEntity<UserProfilePostResponse> save(UserProfilePostRequest request);
+  ResponseEntity<UserProfilePostResponse> saveProfile(UserProfilePostRequest request);
 
   @Operation(summary = "Update user profile", description = "Update user profile")
-  ResponseEntity<Void> update(UserProfilePutRequest request);
+  ResponseEntity<Void> updateProfile(UserProfilePutRequest request);
 
   @Operation(summary = "Delete user profile by id", description = "Delete user profile by id")
-  ResponseEntity<Void> deleteById(Long id);
+  ResponseEntity<Void> deleteProfileById(Long id);
 
 }

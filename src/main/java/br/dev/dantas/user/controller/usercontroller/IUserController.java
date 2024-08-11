@@ -17,17 +17,17 @@ public interface IUserController {
   public static final String V1_PATH_OTHER = "/api/v1/users/";
 
   @Operation(summary = "List all users")
-  ResponseEntity<List<UserGetResponse>> list();
+  ResponseEntity<List<UserGetResponse>> listAllUsers();
 
   @Operation(summary = "Find user by id")
-  ResponseEntity<UserGetResponse> findById(Long id);
+  ResponseEntity<UserGetResponse> findUserById(Long id);
 
   @Operation(summary = "Create user")
-  ResponseEntity<UserPostResponse> save(UserPostRequest request);
+  ResponseEntity<UserPostResponse> saveUser(UserPostRequest request);
 
   @Operation(summary = "Delete user by id")
-  ResponseEntity<Void> delete(Long id);
+  ResponseEntity<Void> deleteUser(Long id);
 
   @Operation(summary = "Update user")
-  ResponseEntity<Void> update(UserPutRequest request);
+  ResponseEntity<Void> updateUser(UserPutRequest request);
 }

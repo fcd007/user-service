@@ -38,7 +38,7 @@ public class UserController implements IUserController {
 
   @GetMapping
   @Override
-  public ResponseEntity<List<UserGetResponse>> list() {
+  public ResponseEntity<List<UserGetResponse>> listAllUsers() {
     log.info("Request received to list all users");
 
     var users = userService.findAll();
@@ -49,7 +49,7 @@ public class UserController implements IUserController {
 
   @GetMapping("{id}")
   @Override
-  public ResponseEntity<UserGetResponse> findById(@PathVariable Long id) {
+  public ResponseEntity<UserGetResponse> findUserById(@PathVariable Long id) {
     log.info("Request received find user by id '{}'", id);
 
     var user = userService.findById(id);
@@ -60,7 +60,7 @@ public class UserController implements IUserController {
 
   @PostMapping
   @Override
-  public ResponseEntity<UserPostResponse> save(@RequestBody @Valid UserPostRequest request) {
+  public ResponseEntity<UserPostResponse> saveUser(@RequestBody @Valid UserPostRequest request) {
     log.info("Request create user post method '{}'", request);
 
     var user = userMapper.toUser(request);
@@ -72,7 +72,7 @@ public class UserController implements IUserController {
 
   @DeleteMapping("{id}")
   @Override
-  public ResponseEntity<Void> delete(@PathVariable Long id) {
+  public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
     log.info("Request received to delete the user by id'{}'", id);
 
     userService.delete(id);
@@ -81,7 +81,7 @@ public class UserController implements IUserController {
 
   @PutMapping
   @Override
-  public ResponseEntity<Void> update(@RequestBody @Valid UserPutRequest request) {
+  public ResponseEntity<Void> updateUser(@RequestBody @Valid UserPutRequest request) {
     log.info("Request received to update the user '{}'", request);
 
     var userToUpdate = userMapper.toUser(request);

@@ -1,7 +1,6 @@
 package br.dev.dantas.user.controller.profilecontroller;
 
 import static br.dev.dantas.user.controller.profilecontroller.IProfileController.V1_PATH_DEFAULT;
-import static br.dev.dantas.user.controller.profilecontroller.IProfileController.V1_PATH_OTHER;
 
 import br.dev.dantas.user.controller.profilecontroller.request.ProfilePostRequest;
 import br.dev.dantas.user.controller.profilecontroller.request.ProfilePutRequest;
@@ -39,7 +38,7 @@ public class ProfileController implements IProfileController{
 
   @GetMapping
   @PreAuthorize("hasRole('ADMIN')")
-  public ResponseEntity<List<ProfileGetResponse>> list(@RequestParam(required = false) String name) {
+  public ResponseEntity<List<ProfileGetResponse>> listAllProfiles(@RequestParam(required = false) String name) {
     log.info("Request received to list all profiles, param name '{}' ", name);
 
     var profiles = profileService.findAll(name);
@@ -49,7 +48,7 @@ public class ProfileController implements IProfileController{
   }
 
   @GetMapping("{id}")
-  public ResponseEntity<ProfileGetResponse> findById(@PathVariable @Valid Long id) {
+  public ResponseEntity<ProfileGetResponse> findProfileById(@PathVariable @Valid Long id) {
     log.info("Request received find profile by id '{}' ", id);
 
     var profile = profileService.findById(id);
@@ -59,7 +58,7 @@ public class ProfileController implements IProfileController{
   }
 
   @PostMapping
-  public ResponseEntity<ProfilePostResponse> save(@RequestBody @Valid ProfilePostRequest request) {
+  public ResponseEntity<ProfilePostResponse> saveProfile(@RequestBody @Valid ProfilePostRequest request) {
     log.info("Request create profile post method '{}' ", request);
 
     var profile = mapper.toProfile(request);
@@ -70,7 +69,7 @@ public class ProfileController implements IProfileController{
   }
 
   @DeleteMapping("{id}")
-  public ResponseEntity<Void> deleteById(@PathVariable @Valid Long id) {
+  public ResponseEntity<Void> deleteProfileById(@PathVariable @Valid Long id) {
     log.info("Request received to delete the profile by id'{}' ", id);
 
     profileService.delete(id);
@@ -79,7 +78,7 @@ public class ProfileController implements IProfileController{
   }
 
   @PutMapping
-  public ResponseEntity<Void> update(@RequestBody @Valid ProfilePutRequest request) {
+  public ResponseEntity<Void> updateProfile(@RequestBody @Valid ProfilePutRequest request) {
     log.info("Request received to update the profile '{}' ", request);
 
     var profileToUpdate = mapper.toProfile(request);
