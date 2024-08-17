@@ -2,6 +2,7 @@ server:
   port: 8089
   error:
     include-stacktrace: NEVER
+    include-binding-errors: NEVER
 
 logging:
   level:
@@ -12,7 +13,7 @@ spring:
   datasource:
     url: jdbc:mysql://localhost:3306/user_service?userTimezone=true&serverTimezone=UTC&createDatabaseIfNotExist=true
     username: root
-    password: example
+    password: admin
   jpa:
     show-sql: true
     hibernate:
